@@ -1,0 +1,41 @@
+body{
+    background: #eeebeb;
+}
+
+#leftcolumn{
+    float: left;
+    position: absolute;
+    background: #f6f6f6;
+    border-style: solid;
+    border-color: #eaeaea;
+    width: 250px;
+    height: 800px;
+    color: rgb(46,179,235);
+    padding-left: 0px;
+    border-radius: 15px;
+
+}
+#norte{
+    background: #f9adad;
+    height: 85px;
+    margin-bottom: 8px;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+#norte #sesion{
+    background: #fbfafa;
+    float: right;
+
+}
+#principal{
+    //height: 100%;
+    width: 100% - 250px;
+    background: #ddc8c8;
+    margin-left: 272px;
+
+
+}
+table {
+    border: 1;
+}
