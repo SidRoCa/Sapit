@@ -2,7 +2,7 @@
 
 class Connection {
 
-    private function conectar() {
+    public function conectar() {
         $conex = "host=localhost port=5432 dbname=sapitbd user=admin password=admin";
         $cnx = pg_connect($conex) or die("<h1>Error de conexion.</h1> " . pg_last_error());
     }
@@ -164,6 +164,27 @@ class Connection {
         $result = pg_query('select lugar_tutoria from grupos where id =' . $idGrupo);
         $row = pg_fetch_array($result);
         $res = $row['lugar_tutoria'];
+        return $res;
+    }
+
+    public function getListaDepartamentos(){
+        $this->conectar();
+        $result = pg_query('select id, nombre from departamentos order by id');
+        $res = array();
+        while ($row = pg_fetch_array($result)) {
+            array_push($res, array('id' => $row['id'], 'nombre' => $row['nombre']));
+        }
+        return $res;
+    }
+
+    public function getDepartamentoPorId($idDepartamento){
+        $this->conectar();
+        $result = pg_query('select id, nombre from departamentos where id ='.$idDepartamento);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+             array_push($res, $row['id']);
+             array_push($res, $row['nombre']);
+        }
         return $res;
     }
 

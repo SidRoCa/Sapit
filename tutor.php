@@ -67,6 +67,14 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicActualizarDatosTutor()">Actualizar datos del tutor</a></li>
                         </ul>
                     </li>
+                    <li>
+                        <strong>Periodos</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarDepartamento()">Agregar Departamento</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarDepartamento()">Editar Departamento</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarDepartamento()">Eliminar Departamento</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <div id="principal">
@@ -181,6 +189,83 @@ $conn = new Connection();
     </body>
 </html>
 <script>
+    function clicAgregarDepartamento(){
+        $.ajax({
+            method: "POST",
+            url: "getAgregarDepartamento.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicEditarDepartamento(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDepartamentosEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicEliminarDepartamento(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDepartamentosEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
     function clicGrupos(idGrupo) {
         $.ajax({
             method: "POST",
