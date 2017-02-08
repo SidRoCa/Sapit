@@ -33,7 +33,17 @@ $conn = new Connection();
             <div id="leftcolumn">
                 <ul>
                     <li>
-                        <strong>Periodos</strong>
+                        <strong>Carreras</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarCarrera()">Agregar Carrera</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarCarrera()">Editar Carrera</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarCarrera()">Eliminar Carrera</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <strong>Departamentos</strong>
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicAgregarDepartamento()">Agregar Departamento</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEditarDepartamento()">Editar Departamento</a></li>
@@ -129,5 +139,81 @@ $conn = new Connection();
             }
         });
     }
-    
+
+    function clicAgregarCarrera() {
+        $.ajax({
+            method: "POST",
+            url: "getAgregarCarrera.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicEditarCarrera() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCarrerasEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicEliminarCarrera() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCarrerasEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
 </script>

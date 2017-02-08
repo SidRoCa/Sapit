@@ -3,44 +3,48 @@
         require "conexion.php";
         $conn = new Connection();
         session_start();
-        $departamentos = $conn->getListaDepartamentos();
+        $carreras = $conn->getListaCarreras();
     ?>
-    <h2>Eliminar Departamento</h2>
+    <h2>Eliminar Carrera</h2>
     <table id="tablaDatos">
         <tr>
             <th>
                 Identificador
             </th>
             <th>
-                Nombre departamento
+                Nombre Carrera
+            </th>
+            <th>
+                Departamento
             </th>
         </tr>
         <?php
-            foreach ($departamentos as $departamento) {
-                echo ('<tr data-id-departamento ="'.$departamento['id'].'">');
-                echo('<td>'.$departamento['id'].'</td>');
-                echo('<td>'.$departamento['nombre'].'</td>');
+            foreach ($carreras as $carrera) {
+                echo ('<tr data-id-carrera ="'.$carrera['id'].'">');
+                echo('<td>'.$carrera['id'].'</td>');
+                echo('<td>'.$carrera['nombre'].'</td>');
+                echo('<td>'.$carrera['departamento'].'</td>');
                 echo('</tr>');
             }
         ?>
     </table>
     <script>
         $("#tablaDatos").on("click","tr", function(){
-            var idString = $(this).attr("data-id-departamento");
+            var idString = $(this).attr("data-id-carrera");
             if(!(typeof idString == 'undefined')){
-                var idDepartamento = parseInt(idString);
+                var idCarrera = parseInt(idString);
                 var eliminar = window.confirm("¿Está seguro que desea eliminar este elemento?");
                 if(eliminar == true){
                     $.ajax({
                         method: "POST",
-                        url: "Conexiones/Departamentos/eliminarDepartamento.php",
-                        data: {idDepartamento: idDepartamento}
+                        url: "Conexiones/Carreras/eliminarCarrera.php",
+                        data: {idCarrera: idCarrera}
                     }).done(function (msg) {
                         if(msg.localeCompare("ok") == 0){
                             window.alert("Eliminado correctamente");
                             irALista();
                         }else{
-                            window.alert("No es posible eliminar este departamento");
+                            window.alert("No es posible eliminar esta carrera");
                         }
                     }).fail(function (jqXHR, textStatus) {
                         if (textStatus === 'timeout') {
@@ -56,7 +60,7 @@
     function irALista(){
         $.ajax({
                 method: "POST",
-                url: "getListaDepartamentosEliminar.php"
+                url: "getListaCarrerasEliminar.php"
             }).done(function (msg) {
                 $("#mainContenido").hide();
                 $("#actualizarDatosTutor").hide();

@@ -188,6 +188,29 @@ class Connection {
         return $res;
     }
 
+    public function getListaCarreras(){
+        $this->conectar();
+        $result = pg_query('select carreras.id as carreras_id, carreras.nombre as carreras_nombre, departamentos.nombre as carreras_departamento from carreras INNER JOIN departamentos ON (carreras.id_departamento = departamentos.id) order by carreras.id asc');
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array('id'=>$row['carreras_id'], 'nombre'=> $row['carreras_nombre'], 'departamento'=>$row['carreras_departamento']));
+        }
+        return $res;
+    }
+
+    public function getCarreraPorId($idCarrera){
+        $this->conectar();
+        $result = pg_query('select carreras.id as carreras_id, carreras.nombre as carreras_nombre, carreras.id_departamento as carreras_iddepartamento, departamentos.nombre as carreras_departamento from carreras INNER JOIN departamentos ON (carreras.id_departamento = departamentos.id) where carreras.id = '.$idCarrera);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, $row['carreras_id']);
+            array_push($res, $row['carreras_nombre']);
+            array_push($res, $row['carreras_iddepartamento']);
+            array_push($res, $row['carreras_departamento']);
+        }
+        return $res;
+    }
+
     public function guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones, $proxFecha, $idAlumno) {
         $this->conectar();
         $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' .(($proxFecha == '') ? 'cast(NULL as timestamp)' : '\''.$proxFecha.'\''). ',' . $idAlumno . ')');
