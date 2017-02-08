@@ -37,16 +37,18 @@
         $cnt = 1;
         foreach ($listaTutores as $tutor) {
             echo ('<tr>');
-            echo ('<td>' . $cnt . '. ' . $tutor['nombre'] . '</td>');
+            echo ('<td>' . $cnt . '. ' . $tutor['nombre'] . ' ID: '. $tutor['id'] .'</td>');
 
             $grupoNombre = $conn->getGrupoTutor($tutor['id']);
             echo ('<td> ' . $grupoNombre . '</td>');
 
+            $numeroEstudiantesGrupalTutor = $conn->getCantidadEstudiantesGrupalTutor($tutor['id']);
+            echo ('<td> ' . $numeroEstudiantesGrupalTutor . '</td>');
+            
             $numeroEstudiantesIndividualTutor = $conn->getCantidadEstudiantesIndividualTutor($tutor['id']);
             echo ('<td> ' . $numeroEstudiantesIndividualTutor . '</td>');
 
-            $numeroEstudiantesGrupalTutor = $conn->getCantidadEstudiantesGrupalTutor($tutor['id']);
-            echo ('<td> ' . $numeroEstudiantesGrupalTutor . '</td>');
+            
 
             echo ('<td> <input type="text"> </td>');
             echo ('<td> <input type="text"> </td>');

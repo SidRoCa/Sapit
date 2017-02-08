@@ -60,6 +60,15 @@ if (trim($_POST["usuario"]) != "" && trim($_POST["password"]) != "") {
                 </SCRIPT> 
                 <?php
             }
+            if ($row['tipo'] == 'Administrador') {
+                $_SESSION["tipo_usuario"] = "admin";
+                ?>
+                <SCRIPT LANGUAGE="javascript">
+                    location.href = "administrador.php";
+                </SCRIPT> 
+                <?php
+            }
+            
         } else {
             echo 'Password incorrecto';
         }

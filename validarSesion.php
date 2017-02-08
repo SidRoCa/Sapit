@@ -29,11 +29,19 @@ if ($_SESSION["tipo_usuario"] == "alumno") {
                 </SCRIPT> 
                 <?php
             } else {
-                ?>
-                <SCRIPT LANGUAGE="javascript">
-                    location.href = "login.php";
-                </SCRIPT> 
-                <?php
+                if ($_SESSION["tipo_usuario"] == "admin") {
+                    ?>
+                    <SCRIPT LANGUAGE="javascript">
+                        location.href = "administrador.php";
+                    </SCRIPT> 
+                    <?php
+                } else {
+                    ?>
+                    <SCRIPT LANGUAGE="javascript">
+                        location.href = "login.php";
+                    </SCRIPT> 
+                    <?php
+                }
             }
         }
     }

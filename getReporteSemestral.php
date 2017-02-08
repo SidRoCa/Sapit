@@ -156,7 +156,7 @@
                 var lstIdAlumnos = '';
 
 
-                alert("Tabla: " + arreglo);
+                
 
                 $.ajax({
                     method: "POST",
