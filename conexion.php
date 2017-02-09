@@ -18,7 +18,7 @@ class Connection {
         return $res;
     }
 
-    public function getTutor($idTutor) {    
+    public function getTutor($idTutor) {
         $this->conectar();
         $result = pg_query('select nombres, ap_paterno, ap_materno, correo, departamentos.nombre as nombre_departamento, telefono,  grupos.lugar_tutoria, grupos.horario, grupos.nombre as nombre_grupo from tutores, departamentos, grupos where departamentos.id = tutores.id_departamento  and (grupos.id_tutor1 = tutores.id or grupos.id_tutor2 = tutores.id) and tutores.id =' . $idTutor);
         $row = pg_fetch_array($result);
@@ -167,7 +167,7 @@ class Connection {
         return $res;
     }
 
-    public function getListaDepartamentos(){
+    public function getListaDepartamentos() {
         $this->conectar();
         $result = pg_query('select id, nombre from departamentos order by id');
         $res = array();
@@ -177,32 +177,42 @@ class Connection {
         return $res;
     }
 
-    public function getDepartamentoPorId($idDepartamento){
+    public function getListaPeriodos() {
         $this->conectar();
-        $result = pg_query('select id, nombre from departamentos where id ='.$idDepartamento);
+        $result = pg_query('select id, identificador, fecha_inicio, fecha_fin from periodos order by id');
         $res = array();
-        while($row = pg_fetch_array($result)){
-             array_push($res, $row['id']);
-             array_push($res, $row['nombre']);
+        while ($row = pg_fetch_array($result)) {
+            array_push($res, array('id' => $row['id'], 'identificador' => $row['identificador'], 'fecha_inicio' => $row['fecha_inicio'], 'fecha_fin' => $row['fecha_fin']));
         }
         return $res;
     }
 
-    public function getListaCarreras(){
+    public function getDepartamentoPorId($idDepartamento) {
+        $this->conectar();
+        $result = pg_query('select id, nombre from departamentos where id =' . $idDepartamento);
+        $res = array();
+        while ($row = pg_fetch_array($result)) {
+            array_push($res, $row['id']);
+            array_push($res, $row['nombre']);
+        }
+        return $res;
+    }
+
+    public function getListaCarreras() {
         $this->conectar();
         $result = pg_query('select carreras.id as carreras_id, carreras.nombre as carreras_nombre, departamentos.nombre as carreras_departamento from carreras INNER JOIN departamentos ON (carreras.id_departamento = departamentos.id) order by carreras.id asc');
         $res = array();
-        while($row = pg_fetch_array($result)){
-            array_push($res, array('id'=>$row['carreras_id'], 'nombre'=> $row['carreras_nombre'], 'departamento'=>$row['carreras_departamento']));
+        while ($row = pg_fetch_array($result)) {
+            array_push($res, array('id' => $row['carreras_id'], 'nombre' => $row['carreras_nombre'], 'departamento' => $row['carreras_departamento']));
         }
         return $res;
     }
 
-    public function getCarreraPorId($idCarrera){
+    public function getCarreraPorId($idCarrera) {
         $this->conectar();
-        $result = pg_query('select carreras.id as carreras_id, carreras.nombre as carreras_nombre, carreras.id_departamento as carreras_iddepartamento, departamentos.nombre as carreras_departamento from carreras INNER JOIN departamentos ON (carreras.id_departamento = departamentos.id) where carreras.id = '.$idCarrera);
+        $result = pg_query('select carreras.id as carreras_id, carreras.nombre as carreras_nombre, carreras.id_departamento as carreras_iddepartamento, departamentos.nombre as carreras_departamento from carreras INNER JOIN departamentos ON (carreras.id_departamento = departamentos.id) where carreras.id = ' . $idCarrera);
         $res = array();
-        while($row = pg_fetch_array($result)){
+        while ($row = pg_fetch_array($result)) {
             array_push($res, $row['carreras_id']);
             array_push($res, $row['carreras_nombre']);
             array_push($res, $row['carreras_iddepartamento']);
@@ -213,7 +223,7 @@ class Connection {
 
     public function guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones, $proxFecha, $idAlumno) {
         $this->conectar();
-        $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' .(($proxFecha == '') ? 'cast(NULL as timestamp)' : '\''.$proxFecha.'\''). ',' . $idAlumno . ')');
+        $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' . (($proxFecha == '') ? 'cast(NULL as timestamp)' : '\'' . $proxFecha . '\'') . ',' . $idAlumno . ')');
         return $res;
     }
 
@@ -244,10 +254,11 @@ class Connection {
         pg_query('commit') or die('Ocurrió un error durante la transacción');
         return $result;
     }
-    public function guardarReporteTutor($idTutor, $idGrupo, $fecha,  $tabla, $listaIdAlumnos, $observaciones) {
+
+    public function guardarReporteTutor($idTutor, $idGrupo, $fecha, $tabla, $listaIdAlumnos, $observaciones) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
-        $result = pg_query('insert into reporte_tutor values (default, ' . $idTutor . ',\'' . $fecha . '\',' . $idGrupo . ',\''. $observaciones.'\') returning id');
+        $result = pg_query('insert into reporte_tutor values (default, ' . $idTutor . ',\'' . $fecha . '\',' . $idGrupo . ',\'' . $observaciones . '\') returning id');
         $row = pg_fetch_array($result);
         if ($row) {
             $a = explode("|", $tabla);
@@ -258,12 +269,11 @@ class Connection {
                 foreach ($b as $d) {
                     $query = $query . ', \'' . $d . '\'';
                 }
-                
+
                 $query = $query . ')';
                 $result = pg_query($query);
                 $cnt++;
             }
-            
         }
         pg_query('commit') or die('Ocurrió un error durante la transacción');
         return $result;
@@ -290,8 +300,8 @@ class Connection {
         pg_query('commit') or die('Ocurrió un error durante la transacción');
         return $result;
     }
-    
-    public function getProblematicasGrupo($idGrupo){
+
+    public function getProblematicasGrupo($idGrupo) {
         $this->conectar();
         $res = array();
         $result = pg_query('select problematica, valor, objetivos, acciones from det_plan_accion_tutorial_problematicas, plan_accion_tutorial where det_plan_accion_tutorial_problematicas.id_plan_accion_tutorial = plan_accion_tutorial.id and plan_accion_tutorial.id_grupo = ' . $idGrupo);
@@ -309,7 +319,7 @@ class Connection {
         $row = pg_fetch_row($query);
         $id = $row['0'];
         if ($id) {
-            
+
             $a = explode("|", $tablaProb);
             foreach ($a as $s) {
                 $query = 'insert into det_plan_accion_tutorial_problematicas values (' . $id;
@@ -320,7 +330,7 @@ class Connection {
                 $query = $query . ')';
                 $result = pg_query($query);
             }
-            
+
             $a = explode("|", $tabla);
             foreach ($a as $s) {
                 $query = 'insert into det_plan_accion_tutorial values (' . $id;
@@ -344,7 +354,7 @@ class Connection {
         $row = pg_fetch_row($query);
         $id = $row['0'];
         if ($id) {
-            
+
             $a = explode("|", $tablaProb);
             foreach ($a as $s) {
                 $query = 'insert into det_plan_accion_tutorial_departamental_problematicas values (' . $id;
@@ -355,7 +365,7 @@ class Connection {
                 $query = $query . ')';
                 $result = pg_query($query);
             }
-            
+
             $a = explode("|", $tabla);
             foreach ($a as $s) {
                 $query = 'insert into det_plan_accion_tutorial_departamental values (' . $id;
@@ -443,11 +453,24 @@ class Connection {
         $row = pg_fetch_array($result);
         return $row['nombre'];
     }
+
     public function getPeriodo($idGrupo) {
         $this->conectar();
-        $result = pg_query('select identificador from periodos, grupos where periodos.id = grupos.id_periodo and grupos.id_periodo = 1 group by periodos.identificador');
+        $result = pg_query('select identificador from periodos, grupos where periodos.id = grupos.id_periodo and grupos.id = ' . $idGrupo . ' group by periodos.identificador');
         $row = pg_fetch_array($result);
         return $row['identificador'];
+    }
+
+    public function getPeriodoPorId($idPeriodo) {
+        $this->conectar();
+        $res = pg_query('select identificador, fecha_inicio, fecha_fin from periodos where id = ' . $idPeriodo);
+        $result = array();
+        while ($row = pg_fetch_array($res)) {
+            array_push($result, $row['identificador']);
+            array_push($result, $row['fecha_inicio']);
+            array_push($result, $row['fecha_fin']);
+        }
+        return $result;
     }
 
     public function getCarreras() {
@@ -480,8 +503,6 @@ class Connection {
         return $res;
     }
 
-    
-
     public function getValorProblematicaGrupo($idGrupo) {
         $this->conectar();
         $result = pg_query('select valor_asignado from plan_accion_tutorial where id_grupo =' . $idGrupo);
@@ -489,10 +510,6 @@ class Connection {
         $res = $row['valor_asignado'];
         return $res;
     }
-
-    
-
-    
 
     public function getSemestresDpto($idDpto) {
         $this->conectar();
