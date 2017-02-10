@@ -1,5 +1,6 @@
 <div id="mainContenido">
     <?php
+    session_start();
     require "conexion.php";
     $conn = new Connection();
     date_default_timezone_set('America/Denver');
@@ -14,10 +15,7 @@
         <p id="tutores">
             <?php
             $idGrupo = intval($_POST['idGrupo']);
-            $res = $conn->getTutoresGrupo($idGrupo);
-            foreach ($res as $tutor) {
-                echo ('<p>' . $tutor['id'] . " " . $tutor['nombres'] . " " . $tutor['ap_paterno'] . " " . $tutor['ap_materno'] . "</p>");
-            }
+            echo ($_SESSION['nombre_usuario']);
             echo('</p>');
             ?>
         <h3>INFORME DE UNA ENTREVISTA TUTORIAL</h3>  
@@ -60,7 +58,7 @@
                 $.ajax({
                     method: "POST",
                     url: "guardarFormatoTutoriaIndividual.php",
-                    data: {idGrupo: idGrupo, fecha: $("#fecha").val() , solicPor: $("#solicPor").val(), motivos: $("#motivos").val(), aspectos: $("#aspectos").val(), conclusiones: $("#conclusiones").val(), observaciones: $("#observaciones").val(), proxFecha:$("#proxFecha").val(), idAlumno: $("#selAlumno").val()}
+                    data: {idGrupo: idGrupo, fecha: $("#fecha").val() , solicPor: $("#solicPor").val(), motivos: $("#motivos").val(), aspectos: $("#aspectos").val(), conclusiones: $("#conclusiones").val(), observaciones: $("#observaciones").val(), proxFecha:$("#proxFecha").val(), idAlumno: $("#selAlumno").val(), idTutor: <?php echo($_SESSION['id_usuario']) ?> }
                 }).done(function (msg) {
                     $("#fichaAlumnosTutorados").hide();
                     $("#registroAsistenciaGrupal").hide();

@@ -13,11 +13,12 @@
     $observaciones = ($_POST['observaciones']);
     $proxFecha = ($_POST['proxFecha']);
     $idAlumno = ($_POST['idAlumno']);
+    $idTutor = ($_POST['idTutor']);
 
 
 
 
-    $res = $conn->guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones,  $proxFecha, $idAlumno);
+    $res = $conn->guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones,  $proxFecha, $idAlumno, $idTutor);
     if ($res) {
         echo('<p>Éxito!</p>');
     } else {

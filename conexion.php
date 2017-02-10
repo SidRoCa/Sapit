@@ -81,7 +81,7 @@ class Connection {
         $res = pg_query('select id from grupos where id_tutor1 =' . $idTutor . ' or id_tutor2 =' . $idTutor . ';');
         $row = pg_fetch_array($res);
         $idGrupo = $row['id'];
-        $res = pg_query('select count(*) as cnt from det_grupos where id_grupo = ' . $idGrupo);
+        $res = pg_query('select count(*) as cnt from tutorias_grupal where id_grupo = ' . $idGrupo);
         $row = pg_fetch_array($res);
         $cntGrupo = $row['cnt'];
 
@@ -93,7 +93,7 @@ class Connection {
         $res = pg_query('select id from grupos where id_tutor1 =' . $idTutor . ' or id_tutor2 =' . $idTutor . ';');
         $row = pg_fetch_array($res);
         $idGrupo = $row['id'];
-        $res = pg_query('select count(*) as cnt from det_grupos where id_grupo = ' . $idGrupo);
+        $res = pg_query('select count(*) as cnt from tutorias_individual where id_grupo = ' . $idGrupo . 'and id_tutor = ' .$idTutor);
         $row = pg_fetch_array($res);
         $cntGrupo = $row['cnt'];
 
@@ -249,9 +249,9 @@ class Connection {
         return $res;
     }
 
-    public function guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones, $proxFecha, $idAlumno) {
+    public function guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones, $proxFecha, $idAlumno, $idTutor) {
         $this->conectar();
-        $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' . (($proxFecha == '') ? 'cast(NULL as timestamp)' : '\'' . $proxFecha . '\'') . ',' . $idAlumno . ')');
+        $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' . (($proxFecha == '') ? 'cast(NULL as timestamp)' : '\'' . $proxFecha . '\'') . ',' . $idAlumno . ',' . $idTutor . ')');
         return $res;
     }
 
@@ -283,7 +283,7 @@ class Connection {
         return $result;
     }
 
-    public function guardarReporteTutor($idTutor, $idGrupo, $fecha, $tabla, $listaIdAlumnos, $observaciones) {
+    public function guardarReporteTutor($idTutor, $idGrupo, $fecha, $tabla, $observaciones) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
         $result = pg_query('insert into reporte_tutor values (default, ' . $idTutor . ',\'' . $fecha . '\',' . $idGrupo . ',\'' . $observaciones . '\') returning id');
@@ -293,6 +293,29 @@ class Connection {
             $cnt = 0;
             foreach ($a as $s) {
                 $query = 'insert into det_reporte_tutor values (' . $row[0];
+                $b = explode("^", $s);
+                foreach ($b as $d) {
+                    $query = $query . ', \'' . $d . '\'';
+                }
+
+                $query = $query . ')';
+                $result = pg_query($query);
+                $cnt++;
+            }
+        }
+        pg_query('commit') or die('Ocurrió un error durante la transacción');
+        return $result;
+    }
+    public function guardarReporteCoordinadorDepartamental($fecha, $idCrdDpt, $programaEducativo, $departamentoAcademico, $idPeriodo, $tabla, $observaciones) {
+        $this->conectar();
+        pg_query('begin') or die("No se pudo comenzar la transacción");
+        $result = pg_query('insert into reporte_coordinador_departamental values (default,\'' . $fecha . '\',\'' . $programaEducativo . '\',\'' . $departamentoAcademico . '\',' . $idPeriodo . ',\'' . $observaciones . '\',' . $idCrdDpt . ') returning id');
+        $row = pg_fetch_array($result);
+        if ($row) {
+            $a = explode("|", $tabla);
+            $cnt = 0;
+            foreach ($a as $s) {
+                $query = 'insert into det_reporte_coordinador_departamental values (' . $row[0];
                 $b = explode("^", $s);
                 foreach ($b as $d) {
                     $query = $query . ', \'' . $d . '\'';

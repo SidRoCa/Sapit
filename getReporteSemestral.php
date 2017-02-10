@@ -96,7 +96,7 @@
 
 
     
-    function guardar(idGrupo) {
+    function guardar() {
     
         if ($("#fecha").val() != "") {
             if ($("#selAlumno").val() != -1) {
@@ -153,7 +153,7 @@
 
                 });
 
-                var lstIdAlumnos = '';
+                
 
 
                 
@@ -161,7 +161,7 @@
                 $.ajax({
                     method: "POST",
                     url: "guardarReporteSemestral.php",
-                    data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>, fecha: $("#fecha").val(), idGrupo: <?php echo($idGrupo); ?>, tabla: arreglo, listaIdAlumnos: lstIdAlumnos, observaciones: $("#observaciones").val()}
+                    data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>, fecha: $("#fecha").val(), idGrupo: <?php echo($idGrupo); ?>, tabla: arreglo, observaciones: $("#observaciones").val()}
                 }).done(function (msg) {
                     $("#fichaAlumnosTutorados").hide();
                     $("#registroAsistenciaGrupal").hide();

@@ -1,16 +1,18 @@
 <div>
-    <?php
+        <?php
     require "conexion.php";
+    session_start();
     $conn = new Connection();
-
-    $idTutor = intval($_POST['idTutor']);
+    
     $fecha = ($_POST['fecha']);
-    $idGrupo = intval($_POST['idGrupo']);
+    $nombreCrdTutoDpt = ($_POST['nombreCrdTutoDpto']);
+    $programaEducativo = ($_POST['programaEducativo']);
+    $departamentoAcademico = ($_POST['departamentoAcademico']);
+    $idPeriodo = ($_POST['idPeriodo']);
     $tabla = ($_POST['tabla']);
     $observaciones = ($_POST['observaciones']);
 
-
-    $res = $conn->guardarReporteTutor($idTutor, $idGrupo, $fecha, $tabla, $observaciones);
+    $res = $conn->guardarReporteCoordinadorDepartamental($fecha, $_SESSION["id_usuario"], $programaEducativo, $departamentoAcademico, $idPeriodo, $tabla, $observaciones);
 
     if ($res) {
         echo('<p>Éxito!</p>');
@@ -20,42 +22,32 @@
     ?>
     <table>
         <tr>
-            <td>REPORTE SEMESTRAL DEL TUTOR</td>
+            <td>REPORTE SEMESTRAL DEL COORDINADOR DEPARTAMENTAL DE TUTORÍAS</td>
         </tr>
         <tr>
             <td>
-                <strong>Nombre del(los) tutores:</strong> <?php
-                $res = $conn->getTutoresGrupo($idGrupo);
-                foreach ($res as $tutor) {
-                    echo ('<p>' . $tutor['id'] . " " . $tutor['nombres'] . " " . $tutor['ap_paterno'] . " " . $tutor['ap_materno'] . "</p>");
-                }
-                ?>
+                <strong>NOMBRE DEL COORDINADOR DE TUTORÍAS DEL DEPARTAMENTO ACADÉMICO:</strong> <?php echo($nombreCrdTutoDpt);?> 
             </td>
             <td>
-                <strong>Fecha: </strong><?php echo($fecha); ?>
+                <strong>Fecha:</strong><input type="date" id="fecha" value="<?php echo($fecha) ?>" disabled>
             </td>
         </tr>
         <tr>
-            <td>PROGRAMA EDUCATIVO: PROGRAMA INSTITUCIONAL DE TUTORÍAS</td>
-            <td>
-                <?php
-                $res = $conn->getGrupo($idGrupo);
-                echo('<strong>Grupo:</strong>' . $res);
-                ?>                 
-            </td>
-
-
+            <td>PROGRAMA EDUCATIVO: <?php echo($programaEducativo); ?></td>
+            <td>DEPARTAMENTO ACADEMICO: <?php echo($departamentoAcademico); ?> </td>
+            <td>SEMESTRE: <?php echo($idPeriodo); ?> (idPeriodo)</td>
         </tr>
-
-    </table>
-    <table id="tablaDatos">
-        <tr id="headerTablaDatos">
-            <td>LISTA DE ESTUDIANTES</td>
+        <tr>
+            <td>LISTA DE TUTORES</td>
+            <td>GRUPO</td>
             <td>TUTORÍA GRUPAL</td>
             <td>TUTORÍA INDIVIDUAL</td>
             <td>ESTUDIANTES CANALIZADOS EN EL SEMESTRE</td>
-            <td>AREA CANALIZADA</td>
+            <td>ÁREA CANALIZADA</td>
         </tr>
+    </table>
+    <table id="tablaDatos">
+        
         <?php
         $a = explode("|", $tabla);
         $cnt = 1;
@@ -66,15 +58,15 @@
 
             foreach ($b as $d) {
                 if ($auux) {
-                    $res = $conn->getAlumno($d);
-                    echo('<td>' . $cnt . '. ' . $res . '</td>');
+                    $res = $conn->getTutor($d);
+                    echo('<td>' . $cnt . '. ' . $res['nombres']. ' ' . $res['apPaterno']. ' ' . $res['apMaterno']. ' ' . '</td>');
                     $auux = false;
                     $cnt++;
                 } else {
                     echo('<td>' . $d . '</td>');
                 }
             }
-            echo ('<tr>');
+            echo ('</tr>');
         }
         ?>
 
