@@ -36,6 +36,34 @@ class Connection {
         return $res;
     }
 
+    public function getTutorPorId($idTutor){
+        $this->conectar();
+        $result = pg_query('select tutores.id as tutores_id, tutores.nombres as tutores_nombre, tutores.ap_paterno as 
+            tutores_appaterno, tutores.ap_materno as tutores_apmaterno, tutores.correo as tutores_correo, tutores.nip as 
+            tutores_nip, tutores.telefono as tutores_telefono, tutores.cuidad as tutores_ciudad, tutores.domicilio as 
+            tutores_domicilio, tutores.identificador as tutores_identificador, departamentos.id as departamentos_id, 
+            departamentos.nombre as departamentos_nombre from tutores INNER JOIN departamentos ON (tutores.id_departamento =
+            departamentos.id) where tutores.id = '.$idTutor);
+        $res = array();
+        $row = pg_fetch_array($result);
+        $res = array("id"=>$row['tutores_id'], "nombre"=>$row['tutores_nombre'], "apPaterno" => $row['tutores_appaterno'],
+            "apMaterno" => $row['tutores_apmaterno'], "correo"=> $row['tutores_correo'], "nip" => $row['tutores_nip'],
+            "telefono" => $row['tutores_telefono'], "ciudad"=> $row['tutores_ciudad'], "domicilio" => $row['tutores_domicilio'],
+            "identificador" => $row['tutores_identificador'], "idDepartamento"=>$row['departamentos_id'],
+             "nombreDepartamento" => $row['departamentos_nombre']);
+        return $res;
+
+    }
+
+    public function getListaTutores(){
+        $this->conectar();
+        $result = pg_query('select tutores.id as tutores_id, tutores.nombres as tutores_nombres, tutores.ap_paterno as tutores_appaterno, tutores.ap_materno as tutores_apmaterno, departamentos.nombre as tutores_departamento, tutores.identificador as tutores_identificador from tutores INNER JOIN departamentos ON(tutores.id_departamento = departamentos.id)');
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=> $row['tutores_id'], "nombre"=> $row['tutores_nombres'], "apPaterno"=> $row['tutores_appaterno'], "apMaterno"=>$row['tutores_apmaterno'], "departamento"=>$row['tutores_departamento'], "identificador"=>$row['tutores_identificador']));
+        }
+        return $res;
+    }
     public function actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $lugar, $horario) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
