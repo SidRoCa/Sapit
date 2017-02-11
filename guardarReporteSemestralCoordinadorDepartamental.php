@@ -1,9 +1,16 @@
 <div>
-        <?php
-    require "conexion.php";
+    <?php
     session_start();
+    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
     $conn = new Connection();
-    
+
     $fecha = ($_POST['fecha']);
     $nombreCrdTutoDpt = ($_POST['nombreCrdTutoDpto']);
     $programaEducativo = ($_POST['programaEducativo']);
@@ -26,7 +33,7 @@
         </tr>
         <tr>
             <td>
-                <strong>NOMBRE DEL COORDINADOR DE TUTORÍAS DEL DEPARTAMENTO ACADÉMICO:</strong> <?php echo($nombreCrdTutoDpt);?> 
+                <strong>NOMBRE DEL COORDINADOR DE TUTORÍAS DEL DEPARTAMENTO ACADÉMICO:</strong> <?php echo($nombreCrdTutoDpt); ?> 
             </td>
             <td>
                 <strong>Fecha:</strong><input type="date" id="fecha" value="<?php echo($fecha) ?>" disabled>
@@ -47,7 +54,7 @@
         </tr>
     </table>
     <table id="tablaDatos">
-        
+
         <?php
         $a = explode("|", $tabla);
         $cnt = 1;
@@ -59,7 +66,7 @@
             foreach ($b as $d) {
                 if ($auux) {
                     $res = $conn->getTutor($d);
-                    echo('<td>' . $cnt . '. ' . $res['nombres']. ' ' . $res['apPaterno']. ' ' . $res['apMaterno']. ' ' . '</td>');
+                    echo('<td>' . $cnt . '. ' . $res['nombres'] . ' ' . $res['apPaterno'] . ' ' . $res['apMaterno'] . ' ' . '</td>');
                     $auux = false;
                     $cnt++;
                 } else {

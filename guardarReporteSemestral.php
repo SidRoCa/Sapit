@@ -3,6 +3,15 @@
     require "conexion.php";
     $conn = new Connection();
 
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    
     $idTutor = intval($_POST['idTutor']);
     $fecha = ($_POST['fecha']);
     $idGrupo = intval($_POST['idGrupo']);

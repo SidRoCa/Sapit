@@ -3,7 +3,16 @@
     require "conexion.php";
     $conn = new Connection();
     date_default_timezone_set('America/Denver');
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     ?>
+    
 
     <script>var d = new Date()</script>
     <h2>Control de asistencia a las sesiones de tutorías</h2>

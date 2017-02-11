@@ -1,8 +1,15 @@
 <div>
     <?php
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "crdinst") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     date_default_timezone_set('America/Denver');
     ?>
     <table id="tablaDatos">

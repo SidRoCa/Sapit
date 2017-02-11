@@ -1,5 +1,12 @@
 <?php
-
+session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
 require "../../conexion.php";
 $conn = new Connection();
 if (filter_input(INPUT_POST, 'idGrupo') and filter_input(INPUT_POST, 'nombre') and filter_input(INPUT_POST, 'lugarTutoria') and filter_input(INPUT_POST, 'idPeriodo') and filter_input(INPUT_POST, 'idTutor1') and filter_input(INPUT_POST, 'idTutor2') and filter_input(INPUT_POST, 'horario')) {

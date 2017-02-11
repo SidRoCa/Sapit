@@ -3,6 +3,13 @@
     require "conexion.php";
     $conn = new Connection();
     session_start();
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     ?>
     <h2>DATOS DEL DOCENTE TUTOR</h2>
     <?php

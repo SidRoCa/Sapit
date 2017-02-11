@@ -1,24 +1,31 @@
 <div>
     <?php
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     ?>
     <h2>Agregar Departamento</h2>
-        <form id="formulario">
-            <input type="text" name = "nombre_departamento" id="txtNombre"/>
-            <button onclick="guardar()" id="btnGuardar">
-                Aceptar
-            </button>
-            <button onclick="cancelar()" id="btnCancelar">
-                Cancelar
-            </button>
-            <p id="txtEstado" hidden>
-            </p>
-        </form>
-    
+    <form id="formulario">
+        <input type="text" name = "nombre_departamento" id="txtNombre"/>
+        <button onclick="guardar()" id="btnGuardar">
+            Aceptar
+        </button>
+        <button onclick="cancelar()" id="btnCancelar">
+            Cancelar
+        </button>
+        <p id="txtEstado" hidden>
+        </p>
+    </form>
+
     <script>
-        $("#formulario").submit(function(e){
+        $("#formulario").submit(function (e) {
             return false;
         });
 
@@ -26,11 +33,11 @@
             irALista();
         }
 
-        function guardar(){
+        function guardar() {
             var nombre = $("#txtNombre");
-            if(!nombre.val()){
+            if (!nombre.val()) {
                 window.alert("Todos los campos con * son obligatorios");
-            }else{
+            } else {
                 var txtEstado = $("#txtEstado");
                 var btnGuardar = $("#btnGuardar");
                 var btnCancelar = $("#btnCancelar");
@@ -43,9 +50,9 @@
                     url: "Conexiones/Departamentos/guardarDepartamento.php",
                     data: {nombreDepartamento: nombre.val()}
                 }).done(function (msg) {
-                    if(msg.localeCompare("ok") == 0){
-                        irALista();     
-                    }else{
+                    if (msg.localeCompare("ok") == 0) {
+                        irALista();
+                    } else {
                         txtEstado.html("Ocurrió un error, inténtalo de nuevo");
                         btnCancelar.show();
                         btnGuardar.show();
@@ -61,8 +68,8 @@
                 });
             }
         }
-        function irALista(){
-             $.ajax({
+        function irALista() {
+            $.ajax({
                 method: "POST",
                 url: "getListaDepartamentosEditar.php"
             }).done(function (msg) {

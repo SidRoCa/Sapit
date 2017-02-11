@@ -3,9 +3,18 @@
     require "conexion.php";
     $conn = new Connection();
     date_default_timezone_set('America/Denver');
-
     $idGrupo = intval($_POST['idGrupo']);
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     ?>
+    
+    
     <p>DIAGNÓSTICO DEL GRUPO</p>
     <table>
         <tr>

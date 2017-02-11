@@ -1,9 +1,17 @@
 <div>
     <?php
-        require "conexion.php";
-        $conn = new Connection();
-        session_start();
-        $departamentos = $conn->getListaDepartamentos();
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
+    $conn = new Connection();
+    session_start();
+    $departamentos = $conn->getListaDepartamentos();
     ?>
     <h2>Editar un departamento</h2>
     <table id="tablaDatos">
@@ -16,18 +24,18 @@
             </th>
         </tr>
         <?php
-            foreach ($departamentos as $departamento) {
-                echo ('<tr data-id-departamento ="'.$departamento['id'].'">');
-                echo('<td>'.$departamento['id'].'</td>');
-                echo('<td>'.$departamento['nombre'].'</td>');
-                echo('</tr>');
-            }
+        foreach ($departamentos as $departamento) {
+            echo ('<tr data-id-departamento ="' . $departamento['id'] . '">');
+            echo('<td>' . $departamento['id'] . '</td>');
+            echo('<td>' . $departamento['nombre'] . '</td>');
+            echo('</tr>');
+        }
         ?>
     </table>
     <script>
-        $("#tablaDatos").on("click","tr", function(){
+        $("#tablaDatos").on("click", "tr", function () {
             var idString = $(this).attr("data-id-departamento");
-            if(!(typeof idString == 'undefined')){
+            if (!(typeof idString == 'undefined')) {
                 var idDepartamento = parseInt(idString);
                 $.ajax({
                     method: "POST",

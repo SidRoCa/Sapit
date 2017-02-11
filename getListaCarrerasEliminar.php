@@ -1,9 +1,16 @@
 <div>
     <?php
-        require "conexion.php";
-        $conn = new Connection();
-        session_start();
-        $carreras = $conn->getListaCarreras();
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
+    $conn = new Connection();
+    $carreras = $conn->getListaCarreras();
     ?>
     <h2>Eliminar Carrera</h2>
     <table id="tablaDatos">
@@ -19,31 +26,31 @@
             </th>
         </tr>
         <?php
-            foreach ($carreras as $carrera) {
-                echo ('<tr data-id-carrera ="'.$carrera['id'].'">');
-                echo('<td>'.$carrera['id'].'</td>');
-                echo('<td>'.$carrera['nombre'].'</td>');
-                echo('<td>'.$carrera['departamento'].'</td>');
-                echo('</tr>');
-            }
+        foreach ($carreras as $carrera) {
+            echo ('<tr data-id-carrera ="' . $carrera['id'] . '">');
+            echo('<td>' . $carrera['id'] . '</td>');
+            echo('<td>' . $carrera['nombre'] . '</td>');
+            echo('<td>' . $carrera['departamento'] . '</td>');
+            echo('</tr>');
+        }
         ?>
     </table>
     <script>
-        $("#tablaDatos").on("click","tr", function(){
+        $("#tablaDatos").on("click", "tr", function () {
             var idString = $(this).attr("data-id-carrera");
-            if(!(typeof idString == 'undefined')){
+            if (!(typeof idString == 'undefined')) {
                 var idCarrera = parseInt(idString);
                 var eliminar = window.confirm("¿Está seguro que desea eliminar este elemento?");
-                if(eliminar == true){
+                if (eliminar == true) {
                     $.ajax({
                         method: "POST",
                         url: "Conexiones/Carreras/eliminarCarrera.php",
                         data: {idCarrera: idCarrera}
                     }).done(function (msg) {
-                        if(msg.localeCompare("ok") == 0){
+                        if (msg.localeCompare("ok") == 0) {
                             window.alert("Eliminado correctamente");
                             irALista();
-                        }else{
+                        } else {
                             window.alert("No es posible eliminar esta carrera");
                         }
                     }).fail(function (jqXHR, textStatus) {
@@ -57,8 +64,8 @@
             }
         });
 
-    function irALista(){
-        $.ajax({
+        function irALista() {
+            $.ajax({
                 method: "POST",
                 url: "getListaCarrerasEliminar.php"
             }).done(function (msg) {
@@ -81,6 +88,6 @@
                     $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
                 }
             });
-    }
+        }
     </script>
 </div>

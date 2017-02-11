@@ -1,36 +1,43 @@
 <div>
     <?php
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
     $departamentos = $conn->getListaDepartamentos();
-    session_start();
     ?>
     <h2>Agregar Carrera</h2>
-        <form id="formulario">
-            <label for="nombre_carrera: * ">Nombre</label>
-            <input type="text" name = "nombre_carrera" id="txtNombre"/></br>
-            <select id="selectDepartamento">
-                <option value="0">-Selecciona un departamento</option>
-                <?php 
-                    foreach ($departamentos as $departamento) {
-                        echo '<option value="'.$departamento['id'].'">';
-                        echo $departamento['nombre'];
-                        echo '</option>';
-                    }
-                ?>
-            </select></br>
-            <button onclick="guardar()" id="btnGuardar">
-                Aceptar
-            </button>
-            <button onclick="cancelar()" id="btnCancelar">
-                Cancelar
-            </button>
-            <p id="txtEstado" hidden>
-            </p>
-        </form>
-    
+    <form id="formulario">
+        <label for="nombre_carrera: * ">Nombre</label>
+        <input type="text" name = "nombre_carrera" id="txtNombre"/></br>
+        <select id="selectDepartamento">
+            <option value="0">-Selecciona un departamento</option>
+            <?php
+            foreach ($departamentos as $departamento) {
+                echo '<option value="' . $departamento['id'] . '">';
+                echo $departamento['nombre'];
+                echo '</option>';
+            }
+            ?>
+        </select></br>
+        <button onclick="guardar()" id="btnGuardar">
+            Aceptar
+        </button>
+        <button onclick="cancelar()" id="btnCancelar">
+            Cancelar
+        </button>
+        <p id="txtEstado" hidden>
+        </p>
+    </form>
+
     <script>
-        $("#formulario").submit(function(e){
+        $("#formulario").submit(function (e) {
             return false;
         });
 
@@ -38,14 +45,14 @@
             irALista();
         }
 
-        function guardar(){
+        function guardar() {
             var nombre = $("#txtNombre");
-            if(!nombre.val()){
+            if (!nombre.val()) {
                 window.alert("Todos los campos con * son obligatorios");
-            }else{
+            } else {
                 var departamentoSeleccionado = $("#selectDepartamento option:selected");
                 var idDepartamento = parseInt(departamentoSeleccionado.val());
-                if(idDepartamento>0){
+                if (idDepartamento > 0) {
                     var txtEstado = $("#txtEstado");
                     var btnGuardar = $("#btnGuardar");
                     var btnCancelar = $("#btnCancelar");
@@ -58,9 +65,9 @@
                         url: "Conexiones/Carreras/guardarCarrera.php",
                         data: {nombreCarrera: nombre.val(), idDepartamento: idDepartamento}
                     }).done(function (msg) {
-                        if(msg.localeCompare("ok") == 0){
+                        if (msg.localeCompare("ok") == 0) {
                             irALista();
-                        }else{
+                        } else {
                             txtEstado.html("Ocurrió un error, inténtalo de nuevo");
                             btnCancelar.show();
                             btnGuardar.show();
@@ -74,15 +81,15 @@
                         btnGuardar.show();
                         btnCancelar.show();
                     });
-                }else{
+                } else {
                     window.alert("Debes seleccionar un departamento");
                 }
-                
+
             }
         }
 
-        function irALista(){
-             $.ajax({
+        function irALista() {
+            $.ajax({
                 method: "POST",
                 url: "getListaCarrerasEditar.php"
             }).done(function (msg) {

@@ -1,5 +1,13 @@
 <div>
     <?php
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
 
@@ -29,7 +37,7 @@
             </td>
         </tr>
         <tr>
-        
+
         <tr>
             <th> UNIDAD ACADÉMICA </th>
         </tr>
@@ -40,7 +48,7 @@
                 echo ($dpto);
                 ?>
             </td> 
-             <td>                
+            <td>                
                 <br><strong>Carreras: </strong>
                 <input id="carreras" type="text" value="<?php
                 $res = $conn->getCarrerasDpto($idDpto);

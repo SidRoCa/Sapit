@@ -1,57 +1,64 @@
 <div>
     <?php
-        require "conexion.php";
-        $conn = new Connection();
-        session_start();
-        $idCarrera = $_POST['idCarrera'];
-        $carrera = $conn->getCarreraPorId($idCarrera);
-        $departamentos = $conn->getListaDepartamentos();
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
+    $conn = new Connection();
+    $idCarrera = $_POST['idCarrera'];
+    $carrera = $conn->getCarreraPorId($idCarrera);
+    $departamentos = $conn->getListaDepartamentos();
     ?>
     <h2>Editar departamento</h2>
-        <form id = "formulario">
-            <label for = "nombre">
-                Nombre: *
-            </label>
-            <input type="text" name = "nombre" id="txtNombre" value = "<?php echo $carrera[1]?>"> </br>
-            <select id = "selectDepartamento">
-                <?php 
-                    foreach ($departamentos as $departamento) {
-                        if($departamento['id']==$carrera[2]){
-                            echo '<option value = "'.$departamento['id'].'" selected>';
-                        }else{
-                            echo '<option value = "'.$departamento['id'].'">';    
-                        }
-                        echo $departamento['nombre'];
-                        echo '</option>';
-                    }
-                ?>
-            </select></br> 
-            <button id="btnGuardar" onclick = "guardar()">
-                Guardar
-            </button>
-            <button id="btnCancelar" onclick = "cancelar()">
-                Cancelar
-            </button>
-            <p id = "txtEstado">
+    <form id = "formulario">
+        <label for = "nombre">
+            Nombre: *
+        </label>
+        <input type="text" name = "nombre" id="txtNombre" value = "<?php echo $carrera[1] ?>"> </br>
+        <select id = "selectDepartamento">
+            <?php
+            foreach ($departamentos as $departamento) {
+                if ($departamento['id'] == $carrera[2]) {
+                    echo '<option value = "' . $departamento['id'] . '" selected>';
+                } else {
+                    echo '<option value = "' . $departamento['id'] . '">';
+                }
+                echo $departamento['nombre'];
+                echo '</option>';
+            }
+            ?>
+        </select></br> 
+        <button id="btnGuardar" onclick = "guardar()">
+            Guardar
+        </button>
+        <button id="btnCancelar" onclick = "cancelar()">
+            Cancelar
+        </button>
+        <p id = "txtEstado">
 
-            </p>
-        </form>
+        </p>
+    </form>
     <script>
 
         var carrera = <?php echo json_encode($carrera); ?>;
-        $("#formulario").submit(function(e){
+        $("#formulario").submit(function (e) {
             return false;
         });
 
-        function cancelar(){
+        function cancelar() {
             irALista();
         }
 
-        function guardar(){
+        function guardar() {
             var nombre = $("#txtNombre");
-            if(!nombre.val()){
+            if (!nombre.val()) {
                 window.alert("Todos los campos con * son obligatorios");
-            }else{
+            } else {
                 var departamentoSeleccionado = parseInt($("#selectDepartamento option:selected").val());
                 var txtEstado = $("#txtEstado");
                 var btnGuardar = $("#btnGuardar");
@@ -65,9 +72,9 @@
                     url: "Conexiones/Carreras/editarCarrera.php",
                     data: {idCarrera: carrera[0], nombreCarrera: nombre.val(), idDepartamento: departamentoSeleccionado}
                 }).done(function (msg) {
-                    if(msg.localeCompare("ok") == 0){
-                        irALista();               
-                    }else{
+                    if (msg.localeCompare("ok") == 0) {
+                        irALista();
+                    } else {
                         window.alert(msg);
                         txtEstado.html("Ocurrió un error, inténtalo de nuevo");
                         btnCancelar.show();
@@ -85,8 +92,8 @@
             }
         }
 
-        function irALista(){
-             $.ajax({
+        function irALista() {
+            $.ajax({
                 method: "POST",
                 url: "getListaCarrerasEditar.php"
             }).done(function (msg) {

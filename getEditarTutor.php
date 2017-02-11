@@ -1,11 +1,18 @@
 <div>
     <?php
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
     $idTutor = $_POST['idTutor'];
     $tutor = $conn->getTutorPorId($idTutor);
     $departamentos = $conn->getListaDepartamentos();
-    session_start();
     ?>
     <h2>Agregar Tutor</h2>
         <form id="formulario">

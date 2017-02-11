@@ -1,6 +1,13 @@
 <div>
     <?php
     session_start();
+    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
     require "conexion.php";
     $conn = new Connection();
     date_default_timezone_set('America/Denver');
@@ -168,7 +175,7 @@
                 url: "guardarDiagnosticoDepartamental.php",
                 data: {nombreCrdDpt: $("#nombreCrdDpt").val(), idDepartamento: <?php echo($idDepartamento) ?>, fecha: $("#fecha").val(), arreglo: arreglo}
             }).done(function (msg) {
-               
+
                 $("#mainContenido").show();
                 $("#mainContenido").html(msg);
 

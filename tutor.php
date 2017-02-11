@@ -67,14 +67,6 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicActualizarDatosTutor()">Actualizar datos del tutor</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <strong>Periodos</strong>
-                        <ul>
-                            <li><a href="javascript:void(0);" onclick="clicAgregarDepartamento()">Agregar Departamento</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEditarDepartamento()">Editar Departamento</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEliminarDepartamento()">Eliminar Departamento</a></li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
             <div id="principal">

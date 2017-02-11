@@ -4,6 +4,14 @@
     $conn = new Connection();
     session_start();
     date_default_timezone_set('America/Denver');
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    
     $idGrupo = intval($_POST['idGrupo']);
     ?>
     <table>

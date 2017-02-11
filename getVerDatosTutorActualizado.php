@@ -2,6 +2,14 @@
     <?php
     require "conexion.php";
     $conn = new Connection();
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "tutor") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
 
     $idTutor = ($_POST['idTutor']);
     $nombres = ($_POST['nombres']);

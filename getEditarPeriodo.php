@@ -1,53 +1,59 @@
 <div>
     <?php
-        require "conexion.php";
-        $conn = new Connection();
-        session_start();
-        $idPeriodo = $_POST['idPeriodo'];
-        $periodo = $conn->getPeriodoPorId($idPeriodo);
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
+    $idPeriodo = $_POST['idPeriodo'];
+    $periodo = $conn->getPeriodoPorId($idPeriodo);
     ?>
     <h2>Editar periodo</h2>
-        <form id = "formulario">
-            <label for="nombre_periodo">Nombre: </label>
-            <input type="text" name = "nombre_periodo" id="txtNombre" required value="<?php echo($periodo[0]) ?>"/><br>
-            <label for="fecha_inicio">Fecha de inicio: </label>
-            <input type="date" name = "fecha_inicio" id="dteFechaInicio" value="<?php echo(substr($periodo[1],0,10))?>" required/><br>
-            <label for="fecha_fin">Fecha de fin: </label>
-            <input type="date" name = "fecha_fin" id="dteFechaFin" value="<?php echo(substr($periodo[2],0,10))?>" required/><br>
-            
-            <button id="btnGuardar" onclick = "guardar()">
-                Guardar
-            </button>
-            <button id="btnCancelar" onclick = "cancelar()">
-                Cancelar
-            </button>
-            
-            <p id = "txtEstado">
+    <form id = "formulario">
+        <label for="nombre_periodo">Nombre: </label>
+        <input type="text" name = "nombre_periodo" id="txtNombre" required value="<?php echo($periodo[0]) ?>"/><br>
+        <label for="fecha_inicio">Fecha de inicio: </label>
+        <input type="date" name = "fecha_inicio" id="dteFechaInicio" value="<?php echo(substr($periodo[1], 0, 10)) ?>" required/><br>
+        <label for="fecha_fin">Fecha de fin: </label>
+        <input type="date" name = "fecha_fin" id="dteFechaFin" value="<?php echo(substr($periodo[2], 0, 10)) ?>" required/><br>
 
-            </p>
-        </form>
+        <button id="btnGuardar" onclick = "guardar()">
+            Guardar
+        </button>
+        <button id="btnCancelar" onclick = "cancelar()">
+            Cancelar
+        </button>
+
+        <p id = "txtEstado">
+
+        </p>
+    </form>
 
     <script>
 
         var periodo = <?php echo json_encode($periodo); ?>;
-        $("#formulario").submit(function(e){
+        $("#formulario").submit(function (e) {
             return false;
         });
 
-        function cancelar(){
+        function cancelar() {
             irALista();
         }
-        
-        
 
-        function guardar(){
+
+
+        function guardar() {
             var nombre = $("#txtNombre");
             var fechaInicio = $("#dteFechaInicio");
             var fechaFin = $("#dteFechaFin");
-            
-            if(!nombre.val() || !fechaInicio.val() || !fechaFin.val()){
+
+            if (!nombre.val() || !fechaInicio.val() || !fechaFin.val()) {
                 window.alert("Todos los campos con * son obligatorios");
-            }else{
+            } else {
                 var txtEstado = $("#txtEstado");
                 var btnGuardar = $("#btnGuardar");
                 var btnCancelar = $("#btnCancelar");
@@ -55,15 +61,15 @@
                 txtEstado.show();
                 btnCancelar.hide();
                 btnGuardar.hide();
-                
+
                 $.ajax({
                     method: "POST",
                     url: "Conexiones/Periodos/editarPeriodo.php",
-                    data: {idPeriodo:<?php echo($idPeriodo) ?>,nombrePeriodo: nombre.val(), fechaInicio: fechaInicio.val(), fechaFin: fechaFin.val()}
+                    data: {idPeriodo:<?php echo($idPeriodo) ?>, nombrePeriodo: nombre.val(), fechaInicio: fechaInicio.val(), fechaFin: fechaFin.val()}
                 }).done(function (msg) {
-                    if(msg.localeCompare("ok") == 0){
-                        irALista();     
-                    }else{
+                    if (msg.localeCompare("ok") == 0) {
+                        irALista();
+                    } else {
                         txtEstado.html("Ocurrió un error, inténtalo de nuevo");
                         btnCancelar.show();
                         btnGuardar.show();
@@ -80,8 +86,8 @@
             }
         }
 
-        function irALista(){
-             $.ajax({
+        function irALista() {
+            $.ajax({
                 method: "POST",
                 url: "getListaPeriodosEditar.php"
             }).done(function (msg) {

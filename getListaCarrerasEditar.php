@@ -1,9 +1,16 @@
 <div>
     <?php
-        require "conexion.php";
-        $conn = new Connection();
-        session_start();
-        $carreras = $conn->getListaCarreras();
+    session_start();
+    if ($_SESSION['tipo_usuario'] !== "admin") {
+        ?>
+        <SCRIPT LANGUAGE="javascript">
+            location.href = "validarSesion.php";
+        </SCRIPT> 
+        <?php
+    }
+    require "conexion.php";
+    $conn = new Connection();    
+    $carreras = $conn->getListaCarreras();
     ?>
     <h2>Editar una carrera</h2>
     <table id="tablaDatos">
@@ -19,19 +26,19 @@
             </th>
         </tr>
         <?php
-            foreach ($carreras as $carrera) {
-                echo ('<tr data-id-carrera ="'.$carrera['id'].'">');
-                echo('<td>'.$carrera['id'].'</td>');
-                echo('<td>'.$carrera['nombre'].'</td>');
-                echo('<td>'.$carrera['departamento'].'</td>');
-                echo('</tr>');
-            }
+        foreach ($carreras as $carrera) {
+            echo ('<tr data-id-carrera ="' . $carrera['id'] . '">');
+            echo('<td>' . $carrera['id'] . '</td>');
+            echo('<td>' . $carrera['nombre'] . '</td>');
+            echo('<td>' . $carrera['departamento'] . '</td>');
+            echo('</tr>');
+        }
         ?>
     </table>
     <script>
-        $("#tablaDatos").on("click","tr", function(){
+        $("#tablaDatos").on("click", "tr", function () {
             var idString = $(this).attr("data-id-carrera");
-            if(!(typeof idString == 'undefined')){
+            if (!(typeof idString == 'undefined')) {
                 var idCarrera = parseInt(idString);
                 $.ajax({
                     method: "POST",
