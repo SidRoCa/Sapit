@@ -64,6 +64,15 @@ class Connection {
         }
         return $res;
     }
+    public function getListaGrupos(){
+        $this->conectar();
+        $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos');
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=> $row['id'], "nombre"=> $row['nombre'], "lugarTutoria"=> $row['lugar_tutoria'], "idPeriodo"=>$row['id_periodo'], "idTutor1"=>$row['id_tutor1'], "idTutor2"=>$row['id_tutor2'], "horario"=>$row['horario']));
+        }
+        return $res;
+    }
     public function actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $lugar, $horario) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
@@ -503,6 +512,21 @@ class Connection {
         $result = pg_query('select nombre from grupos where id = ' . $idGrupo);
         $row = pg_fetch_array($result);
         return $row['nombre'];
+    }
+    public function getGrupoPorId($idGrupo) {
+        $this->conectar();
+        $res = pg_query('select id, nombre, lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos where id = ' . $idGrupo);
+        $result = array();
+        while ($row = pg_fetch_array($res)) {
+            array_push($result, $row['id']);
+            array_push($result, $row['nombre']);
+            array_push($result, $row['lugar_tutoria']);
+            array_push($result, $row['id_periodo']);
+            array_push($result, $row['id_tutor1']);
+            array_push($result, $row['id_tutor2']);
+            array_push($result, $row['horario']);
+        }
+        return $result;
     }
 
     public function getPeriodo($idGrupo) {
