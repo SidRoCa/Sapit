@@ -23,7 +23,7 @@
             </label>
             <input type="text" name = "apPaterno" id="txtApPaterno"/></br>
             <label for = "apMaterno">
-                Ap. Materno :
+                Ap. Materno : *
             </label>
             <input type="text" name = "apMaterno" id="txtApMaterno"/></br>
             <label for = "correo">
@@ -47,15 +47,15 @@
             </select> </br>
             
             <label for = "telefono">
-                Telefono : *
+                Telefono : 
             </label>
             <input type="text" name = "telefono" id="txtTelefono"/></br>
             <label for = "ciudad">
-                Ciudad : *
+                Ciudad : 
             </label>
             <input type="text" name = "ciudad" id="txtCiudad"/></br>
             <label for = "domicilio">
-                Domicilio : *
+                Domicilio : 
             </label>
             <input type="text" name = "domicilio" id="txtDomicilio"/></br>
             <label for = "identificador">
@@ -90,6 +90,7 @@
         }
 
         function guardar(){
+            //nombres, apPat, apMat, idDep, nip, identificador
             var nombre = $("#txtNombre");
             var apPaterno = $("#txtApPaterno");
             var apMaterno = $("#txtApMaterno");
@@ -100,8 +101,7 @@
             var identificador = $("#txtIdentificador");
             var nip = $("#txtNip");
             var nipComp = $("#txtNipComp");
-            if(!nombre.val() || !apPaterno.val() || !nip.val() || !telefono.val() || !ciudad.val() || 
-                !domicilio.val() || !identificador.val() || !nipComp.val()){
+            if(!nombre.val() || !apPaterno.val() || !apMaterno.val() ||!nip.val() || !identificador.val() || !nipComp.val()){
                 window.alert("Todos los campos con * son obligatorios");
             }else{
                 if(nip.val().localeCompare(nipComp.val()) == 0){

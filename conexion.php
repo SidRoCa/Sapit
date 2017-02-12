@@ -64,6 +64,7 @@ class Connection {
         }
         return $res;
     }
+
     public function getListaGrupos(){
         $this->conectar();
         $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos');
@@ -73,6 +74,38 @@ class Connection {
         }
         return $res;
     }
+
+    public function getListaAlumnos(){
+        $this->conectar();
+        $result = pg_query('select alumnos.id as alumnos_id, alumnos.nombres as alumnos_nombres, alumnos.ap_paterno as 
+            alumnos_appaterno, alumnos.ap_materno as alumnos_apmaterno, carreras.nombre as alumnos_carrera, grupos.nombre 
+            as alumnos_grupo from alumnos INNER JOIN carreras ON (alumnos.id_carrera = carreras.id) INNER JOIN grupos 
+            ON (alumnos.id_grupo = grupos.id)');
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id" => $row['alumnos_id'], "nombre" => $row['alumnos_nombres'].' '.$row['alumnos_appaterno'].' '.$row['alumnos_apmaterno'], "carrera"=> $row['alumnos_carrera'], "grupo"=> $row['alumnos_grupo']));
+        }
+        return $res;
+    }
+
+    public function getAlumnoPorId($idAlumno){
+        $this->conectar();
+        $result = pg_query('select alumnos.id as alumnos_id, alumnos.nombres as alumnos_nombres, alumnos.ap_paterno as 
+            alumnos_appaterno, alumnos.ap_materno as alumnos_apmaterno, alumnos.correo as alumnos_correo, alumnos.no_control as 
+            alumnos_nocontrol, alumnos.nip as alumnos_nip, alumnos.telefono as alumnos_telefono, alumnos.ciudad as alumnos_ciudad,
+            alumnos.domicilio as alumnos_domicilio, alumnos.id_carrera as alumnos_idcarrera, alumnos.id_grupo as alumnos_idgrupo, 
+            alumnos.nombres_tutor as alumnos_nombrestutor, alumnos.domicilio_tutor as alumnos_domiciliotutor, alumnos.telefono_tutor as 
+            alumnos_telefonotutor, alumnos.ciudad_tutor as alumnos_ciudadtutor from alumnos where id='.$idAlumno);
+        $row = pg_fetch_array($result);
+        $res = array("id"=>$row['alumnos_id'], "nombre"=>$row['alumnos_nombres'], "apPaterno"=>$row['alumnos_appaterno'], 
+            "apMaterno"=>$row['alumnos_apmaterno'], "correo"=>$row['alumnos_correo'], "noControl"=>$row['alumnos_nocontrol'],
+            "nip"=>$row['alumnos_nip'], "telefono"=>$row['alumnos_telefono'], "ciudad"=>$row['alumnos_ciudad'], "domicilio"=>
+            $row['alumnos_domicilio'], "idCarrera"=>$row['alumnos_idcarrera'], "idGrupo"=>$row['alumnos_idgrupo'], "nombreTutor"=>
+            $row['alumnos_nombrestutor'], "domicilioTutor"=>$row['alumnos_domiciliotutor'], "telefonoTutor"=>$row['alumnos_telefonotutor'],
+            "ciudadTutor"=>$row['alumnos_ciudadtutor']);
+        return $res;
+    }
+
     public function actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $lugar, $horario) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");

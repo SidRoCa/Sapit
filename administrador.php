@@ -81,6 +81,16 @@ $conn = new Connection();
                         </ul>
                     </li>
                 </ul>
+                <ul>
+                    <li>
+                        <strong>Alumnos</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarAlumno()">Agregar Alumno</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarAlumno()">Editar Alumno</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarAlumno()">Eliminar Alumno</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
             <div id="principal">
                 <div id="mainContenido" class="mainContenido">
@@ -478,5 +488,81 @@ $conn = new Connection();
             }
         });
     }
-    
+    function clicAgregarAlumno() {
+        $.ajax({
+            method: "POST",
+            url: "getAgregarAlumno.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicEditarAlumno() {
+        $.ajax({
+            method: "POST",
+            url: "getListaAlumnosEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicEliminarAlumno() {
+        $.ajax({
+            method: "POST",
+            url: "getListaAlumnosEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
 </script>
