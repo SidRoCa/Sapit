@@ -46,7 +46,16 @@ $conn = new Connection();
                     <li>
                         <strong>Tutorías</strong> <i>- registro de asistencia</i>
                         <ul>
-                            <li><a href="javascript:void(0);" onclick="clicRegistroTutoriaIndividual()">Individual</a></li>
+
+                            <li>
+                                Individual
+                                <ul>
+                                    <li><a href="javascript:void(0);" onclick="clicRegistroTutoriaIndividual()">Registro de tutoría individual</a></li>
+                                    <li><a href="javascript:void(0);" onclick="clicVerListaTutoriasIndividualesEditar()">Ver lista de tutorías individual (editar)</a></li>
+                                    <li><a href="javascript:void(0);" onclick="clicVerListaTutoriasIndividualesEliminar()">Eliminar tutorías individuales</a></li>
+                                </ul>
+                            </li>
+
                             <li><a href="javascript:void(0);" onclick="clicRegistroTutoriaGrupal()">Grupal</a></li>
                         </ul>
                     </li>
@@ -163,25 +172,25 @@ $conn = new Connection();
                     $idTutor = intval($_SESSION['id_usuario']);
                     $tutor = $conn->getTutor($idTutor);
                     ?>
-                        <input type="text" id="idTutor" value="<?php echo ($idTutor); ?>" hidden>
-                        <p><strong>Nombres: </strong><input type="text" id="nombres" value="<?php echo($tutor['nombres']); ?>"></p>
-                        <p><strong>Apellido paterno: </strong><input type="text" id="apPaterno" value="<?php echo($tutor['apPaterno']); ?>"></p>
-                        <p><strong>Apellido materno: </strong><input type="text" id="apMaterno" value="<?php echo($tutor['apMaterno']); ?>"></p>
-                        <p><strong>Correo electrónico: </strong><input type="text" id="correo" value="<?php echo($tutor['correo']); ?>"></p>
-                        <p><strong>Departamento al que está adscrito: </strong><?php echo($tutor['nombreDpto']); ?></p>
-                        <p><strong>Teléfono: </strong><input type="text" id="telefono" value="<?php echo($tutor['telefono']); ?>"></p>
-                        <p><strong>Lugar tutorías: </strong> <input type="text" id="lugar" value="<?php echo($tutor['lugarTutoria']); ?>"> </p>
-                        <p><strong>Horario tutorías: </strong> <input type="text" id="horario" value="<?php echo($tutor['horario']); ?>"></p>
-                        <p><strong>Grupo tutorado: </strong><?php echo($tutor['nombreGrupo']); ?></p>
-                        <button onclick="clicGuardarDatosTutor()">Guardar</button>
-                        <button onclick="clicCancelar()">Cancelar</button>
+                    <input type="text" id="idTutor" value="<?php echo ($idTutor); ?>" hidden>
+                    <p><strong>Nombres: </strong><input type="text" id="nombres" value="<?php echo($tutor['nombres']); ?>"></p>
+                    <p><strong>Apellido paterno: </strong><input type="text" id="apPaterno" value="<?php echo($tutor['apPaterno']); ?>"></p>
+                    <p><strong>Apellido materno: </strong><input type="text" id="apMaterno" value="<?php echo($tutor['apMaterno']); ?>"></p>
+                    <p><strong>Correo electrónico: </strong><input type="text" id="correo" value="<?php echo($tutor['correo']); ?>"></p>
+                    <p><strong>Departamento al que está adscrito: </strong><?php echo($tutor['nombreDpto']); ?></p>
+                    <p><strong>Teléfono: </strong><input type="text" id="telefono" value="<?php echo($tutor['telefono']); ?>"></p>
+                    <p><strong>Lugar tutorías: </strong> <input type="text" id="lugar" value="<?php echo($tutor['lugarTutoria']); ?>"> </p>
+                    <p><strong>Horario tutorías: </strong> <input type="text" id="horario" value="<?php echo($tutor['horario']); ?>"></p>
+                    <p><strong>Grupo tutorado: </strong><?php echo($tutor['nombreGrupo']); ?></p>
+                    <button onclick="clicGuardarDatosTutor()">Guardar</button>
+                    <button onclick="clicCancelar()">Cancelar</button>
                 </div>
             </div>
         </div>
     </body>
 </html>
 <script>
-    
+
     function clicGrupos(idGrupo) {
         $.ajax({
             method: "POST",
@@ -199,6 +208,58 @@ $conn = new Connection();
             $("#cartaCompromiso").hide();
             $("#fichaAlumnosTutorados").html(msg);
             $("#fichaAlumnosTutorados").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicVerListaTutoriasIndividualesEditar() {
+        $.ajax({
+            method: "POST",
+            url: "getListaTutoriasIndividualesEditar.php",
+            data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>}
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicVerListaTutoriasIndividualesEliminar() {
+        $.ajax({
+            method: "POST",
+            url: "getListaTutoriasIndividualesEliminar.php",
+            data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>}
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
         }).fail(function (jqXHR, textStatus) {
             if (textStatus === 'timeout') {
                 $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
@@ -258,8 +319,8 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
-        
-        
+
+
     }
     function clicActualizarDatosTutor() {
         $("#mainContenido").hide();

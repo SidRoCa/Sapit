@@ -10,7 +10,6 @@
     }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     date_default_timezone_set('America/Denver');
     ?>
     <table>

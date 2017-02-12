@@ -1,6 +1,6 @@
 <div>
     <?php
-    session_start();
+    //session_start();
     if ($_SESSION['tipo_usuario'] !== "admin") {
         ?>
         <SCRIPT LANGUAGE="javascript">

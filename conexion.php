@@ -64,6 +64,15 @@ class Connection {
         }
         return $res;
     }
+    public function getListaTutoriasIndividualesPorTutor($idTutor){
+        $this->conectar();
+        $result = pg_query('select tutorias_individual.id as id_tutorias_individual, tutorias_individual.id_grupo as id_grupo, tutorias_individual.fecha as fecha, tutorias_individual.solicitada_por as solicitada_por, tutorias_individual.motivos as motivos, tutorias_individual.aspectos_tratados as aspectos_tratados, tutorias_individual.conclusiones as conclusiones, tutorias_individual.observaciones as observaciones, tutorias_individual.fecha_prox_visita as fecha_prox_visita, tutorias_individual.id_alumno as id_alumno, tutorias_individual.id_tutor as id_tutor from tutorias_individual where tutorias_individual.id_tutor = '.$idTutor);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=> $row['id_tutorias_individual'], "idGrupo"=> $row['id_grupo'], "fecha"=> $row['fecha'], "solicitadaPor"=>$row['solicitada_por'], "motivos"=>$row['motivos'], "aspectosTratados"=>$row['aspectos_tratados'], "conclusiones"=>$row['conclusiones'], "observaciones"=>$row['observaciones'], "fechaProxVisita"=>$row['fecha_prox_visita'], "idAlumno"=>$row['id_alumno'], "idTutor"=>$row['id_tutor']));
+        }
+        return $res;
+    }
     public function getListaGrupos(){
         $this->conectar();
         $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos');
@@ -261,6 +270,15 @@ class Connection {
     public function guardarTutoriasIndividual($idGrupo, $fecha, $solicPor, $motivos, $aspectos, $conclusiones, $observaciones, $proxFecha, $idAlumno, $idTutor) {
         $this->conectar();
         $res = pg_query('insert into tutorias_individual values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $solicPor . '\',\'' . $motivos . '\',\'' . $aspectos . '\',\'' . $conclusiones . '\',\'' . $observaciones . '\',' . (($proxFecha == '') ? 'cast(NULL as timestamp)' : '\'' . $proxFecha . '\'') . ',' . $idAlumno . ',' . $idTutor . ')');
+        return $res;
+    }
+    public function getTutoriaIndividualPorId($idTutoriaIndividual) {
+        $this->conectar();
+        $result = pg_query('select id, id_grupo, fecha, solicitada_por, motivos, aspectos_tratados, conclusiones, observaciones, fecha_prox_visita, id_alumno, id_tutor from tutorias_individual where id = '.$idTutoriaIndividual);
+        $res = array();
+        $row = pg_fetch_array($result);
+        $res = array('id' => $row['id'], 'idGrupo' => $row['id_grupo'], 'fecha' => $row['fecha'], 'solicitadaPor' => $row['solicitada_por'], 'motivos' => $row['motivos'], 'aspectosTratados' => $row['aspectos_tratados'], 'conclusiones' => $row['conclusiones'], 'observaciones' => $row['observaciones'], 'fechaProxVisita' => $row['fecha_prox_visita'], 'idAlumno' => $row['id_alumno'], 'idTutor' => $row['id_tutor']);
+        
         return $res;
     }
 
