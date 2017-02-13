@@ -4,13 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/Sapit/tutor.php</file>
-            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/Grupos/eliminarGrupo.php</file>
-            <file>file:/C:/xampp/htdocs/Sapit/getListaTutoriasIndividualesEditar.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/getListaTutoriasGrupalesEliminar.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/getListaTutoriasGrupalesEditar.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/getEditarTutoriaGrupal.php</file>
             <file>file:/C:/xampp/htdocs/Sapit/Conexiones/TutoriasIndividuales/eliminarTutoriaIndividual.php</file>
             <file>file:/C:/xampp/htdocs/Sapit/getListaTutoriasIndividualesEliminar.php</file>
-            <file>file:/C:/xampp/htdocs/Sapit/getEditarTutoriaIndividual.php</file>
-            <file>file:/C:/xampp/htdocs/Sapit/getListaGruposEliminar.php</file>
-            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/TutoriasIndividuales/editarTutoriaIndividual.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/TutoriasGrupales/eliminarTutoriaGrupal.php</file>
         </group>
     </open-files>
 </project-private>

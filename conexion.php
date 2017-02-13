@@ -73,6 +73,15 @@ class Connection {
         }
         return $res;
     }
+    public function getListaTutoriasGrupalesPorTutor($idTutor){
+        $this->conectar();
+        $result = pg_query('select tutorias_grupal.id as id_tutorias_grupal, id_grupo, fecha, tema, lugar from tutorias_grupal, grupos where tutorias_grupal.id_grupo = grupos.id and grupos.id_tutor1 = '.$idTutor.' or grupos.id_tutor2 = '.$idTutor.' order by tutorias_grupal.id');
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=> $row['id_tutorias_grupal'], "idGrupo"=> $row['id_grupo'], "fecha"=> $row['fecha'], "tema"=>$row['tema'], "lugar"=>$row['lugar']));
+        }
+        return $res;
+    }
     public function getListaGrupos(){
         $this->conectar();
         $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos');
@@ -311,6 +320,14 @@ class Connection {
         $row = pg_fetch_array($result);
         $res = array('id' => $row['id'], 'idGrupo' => $row['id_grupo'], 'fecha' => $row['fecha'], 'solicitadaPor' => $row['solicitada_por'], 'motivos' => $row['motivos'], 'aspectosTratados' => $row['aspectos_tratados'], 'conclusiones' => $row['conclusiones'], 'observaciones' => $row['observaciones'], 'fechaProxVisita' => $row['fecha_prox_visita'], 'idAlumno' => $row['id_alumno'], 'idTutor' => $row['id_tutor']);
         
+        return $res;
+    }
+    public function getTutoriaGrupalPorId($idTutoriaGrupal) {
+        $this->conectar();
+        $result = pg_query('select id, id_grupo, fecha, tema, lugar from tutorias_grupal where id = '.$idTutoriaGrupal);
+        $res = array();
+        $row = pg_fetch_array($result);
+        $res = array('id' => $row['id'], 'idGrupo' => $row['id_grupo'], 'fecha' => $row['fecha'], 'tema' => $row['tema'], 'lugar' => $row['lugar']);
         return $res;
     }
 

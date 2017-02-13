@@ -55,8 +55,14 @@ $conn = new Connection();
                                     <li><a href="javascript:void(0);" onclick="clicVerListaTutoriasIndividualesEliminar()">Eliminar tutorías individuales</a></li>
                                 </ul>
                             </li>
-
-                            <li><a href="javascript:void(0);" onclick="clicRegistroTutoriaGrupal()">Grupal</a></li>
+                            <li>
+                                Grupal
+                                <ul>
+                                    <li><a href="javascript:void(0);" onclick="clicRegistroTutoriaGrupal()">Registro de tutoría grupal</a></li>
+                                    <li><a href="javascript:void(0);" onclick="clicVerListaTutoriasGrupalesEditar()">Ver lista de tutorias individual (editar)</a></li>
+                                    <li><a href="javascript:void(0);" onclick="clicVerListaTutoriasGrupalesEliminar()">Eliminar tutorías grupales</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -241,6 +247,58 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
+    }
+    function clicVerListaTutoriasGrupalesEditar() {
+        $.ajax({
+            method: "POST",
+            url: "getListaTutoriasGrupalesEditar.php",
+            data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>}
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });5
+    }
+    function clicVerListaTutoriasGrupalesEliminar() {
+        $.ajax({
+            method: "POST",
+            url: "getListaTutoriasGrupalesEliminar.php",
+            data: {idTutor: <?php echo($_SESSION["id_usuario"]); ?>}
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });5
     }
     function clicVerListaTutoriasIndividualesEliminar() {
         $.ajax({

@@ -58,6 +58,9 @@
         <button onclick="cancelar()" id="btnCancelar">
             Cancelar
         </button>
+        <p id = "txtEstado">
+
+        </p>
     </form>
     <script>
 
