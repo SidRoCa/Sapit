@@ -9,45 +9,33 @@
         <?php
     }
     require "conexion.php";
-    $conn = new Connection();
-    $periodos = $conn->getListaPeriodos();
+    $conn = new Connection();    
+    $coordinadoresInstitucionales = $conn->getListaCoordinadoresInstitucionales();
     ?>
-    <h2>Editar un periodo</h2>
+    <h2>Editar un Coordinador Institucional</h2>
     <table id="tablaDatos">
         <tr>
             <th>
-                Identificador
-            </th>
-            <th>
-                Nombre periodo
-            </th>
-            <th>
-                Fecha inicio
-            </th>
-            <th>
-                Fecha fin
+                Nombre
             </th>
         </tr>
         <?php
-        foreach ($periodos as $periodo) {
-            echo ('<tr data-id-periodo ="' . $periodo['id'] . '">');
-            echo('<td>' . $periodo['id'] . '</td>');
-            echo('<td>' . $periodo['identificador'] . '</td>');
-            echo('<td>' . substr($periodo['fecha_inicio'], 0, 10) . '</td>');
-            echo('<td>' . substr($periodo['fecha_fin'], 0, 10) . '</td>');
+        foreach ($coordinadoresInstitucionales as $coordinadorInstitucional) {
+            echo ('<tr data-id-coordinador ="' . $coordinadorInstitucional['id'] . '">');
+            echo('<td>' . $coordinadorInstitucional['nombre'] . '</td>');
             echo('</tr>');
         }
         ?>
     </table>
     <script>
         $("#tablaDatos").on("click", "tr", function () {
-            var idString = $(this).attr("data-id-periodo");
+            var idString = $(this).attr("data-id-coordinador");
             if (!(typeof idString == 'undefined')) {
-                var idPeriodo = parseInt(idString);
+                var idCoordinador = parseInt(idString);
                 $.ajax({
                     method: "POST",
-                    url: "getEditarPeriodo.php",
-                    data: {idPeriodo: idPeriodo}
+                    url: "getEditarCoordinadorInstitucional.php",
+                    data: {idCoordinador: idCoordinador}
                 }).done(function (msg) {
                     $("#mainContenido").hide();
                     $("#actualizarDatosTutor").hide();

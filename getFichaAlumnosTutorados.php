@@ -64,10 +64,23 @@
         echo ('<td>' . $alumno['ciudad_tutor'] . '</td>');
         echo ('</tr>');
     }
-    // select alumnos.nombres, alumnos.ap_paterno, alumnos.ap_materno, alumnos.correo, alumnos.no_control, alumnos.nip, alumnos.telefono, alumnos.domicilio, alumnos.ciudad, carreras.nombre, alumnos.nombres_tutor, alumnos.telefono_tutor, alumnos.domicilio_tutor,  alumnos.ciudad_tutor from alumnos, carreras, det_grupos, grupos where alumnos.id = det_grupos.id_alumno and det_grupos.id_grupo = 1
 
     echo "</table>";
     ?>
 
+    <div>
+        <button onclick="imprimir()">imprimir</button>
+        <button onclick="volver()">Volver</button>
+    </div>
+
 
 </div>
+<script>
+    function volver() {
+        $("#fichaAlumnosTutorados").hide();
+        $("#mainContenido").show();
+    }
+    function imprimir() {
+        alert('Not supported yet');
+    }
+</script>

@@ -1,6 +1,6 @@
 <div>
     <?php
-    //session_start();
+    session_start();
     if ($_SESSION['tipo_usuario'] !== "admin") {
         ?>
         <SCRIPT LANGUAGE="javascript">
@@ -8,7 +8,10 @@
         </SCRIPT> 
         <?php
     }
+    
     require "conexion.php";
+    
+    $conn = new Connection();
     $idPeriodo = $_POST['idPeriodo'];
     $periodo = $conn->getPeriodoPorId($idPeriodo);
     ?>
@@ -50,6 +53,7 @@
             var nombre = $("#txtNombre");
             var fechaInicio = $("#dteFechaInicio");
             var fechaFin = $("#dteFechaFin");
+            var idPeriodo = <?php echo($idPeriodo) ?>;
 
             if (!nombre.val() || !fechaInicio.val() || !fechaFin.val()) {
                 window.alert("Todos los campos con * son obligatorios");
@@ -65,7 +69,7 @@
                 $.ajax({
                     method: "POST",
                     url: "Conexiones/Periodos/editarPeriodo.php",
-                    data: {idPeriodo:<?php echo($idPeriodo) ?>, nombrePeriodo: nombre.val(), fechaInicio: fechaInicio.val(), fechaFin: fechaFin.val()}
+                    data: {idPeriodo: idPeriodo, nombrePeriodo: nombre.val(), fechaInicio: fechaInicio.val(), fechaFin: fechaFin.val()}
                 }).done(function (msg) {
                     if (msg.localeCompare("ok") == 0) {
                         irALista();

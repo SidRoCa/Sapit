@@ -31,16 +31,7 @@ $conn = new Connection();
         </div>
         <div id="contenido">
             <div id="leftcolumn">
-                <ul>
-                    <li>
-                        <strong>Carreras</strong>
-                        <ul>
-                            <li><a href="javascript:void(0);" onclick="clicAgregarCarrera()">Agregar Carrera</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEditarCarrera()">Editar Carrera</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEliminarCarrera()">Eliminar Carrera</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                
                 <ul>
                     <li>
                         <strong>Departamentos</strong>
@@ -83,11 +74,41 @@ $conn = new Connection();
                 </ul>
                 <ul>
                     <li>
+                        <strong>Carreras</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarCarrera()">Agregar Carrera</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarCarrera()">Editar Carrera</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarCarrera()">Eliminar Carrera</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
                         <strong>Alumnos</strong>
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicAgregarAlumno()">Agregar Alumno</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEditarAlumno()">Editar Alumno</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarAlumno()">Eliminar Alumno</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <strong>Coordinadores departamentales</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarCoordinadorDepartamental()">Agregar Coordinador Departamental</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarCoordinadorDepartamental()">Editar Coordinador Departamental</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarCoordinadorDepartamental()">Eliminar Coordinador Departamental</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <strong>Coordinadores institucionales</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarCoordinadorInstitucional()">Agregar Coordinador Institucional</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarCoordinadorInstitucional()">Editar Coordinador Institucional</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarCoordinadorInstitucional()">Eliminar Coordinador Institucional</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -106,6 +127,56 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getAgregarDepartamento.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicAgregarCoordinadorDepartamental() {
+        $.ajax({
+            method: "POST",
+            url: "getAgregarCoordinadorDepartamental.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicAgregarCoordinadorInstitucional() {
+        $.ajax({
+            method: "POST",
+            url: "getAgregarCoordinadorInstitucional.php"
         }).done(function (msg) {
             $("#mainContenido").hide();
             $("#actualizarDatosTutor").hide();
@@ -518,6 +589,106 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaAlumnosEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicEditarCoordinadorDepartamental() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCoordinadoresDepartamentalesEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicEditarCoordinadorInstitucional() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCoordinadoresInstitucionalesEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicEliminarCoordinadorDepartamental() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCoordinadoresDepartamentalesEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#reporteSemestral").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#cartaCompromiso").hide();
+            $("#fichaAlumnosTutorados").hide();
+            $("#mainContenido").html(msg);
+            $("#mainContenido").show();
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+    function clicEliminarCoordinadorInstitucional() {
+        $.ajax({
+            method: "POST",
+            url: "getListaCoordinadoresInstitucionalesEliminar.php"
         }).done(function (msg) {
             $("#mainContenido").hide();
             $("#actualizarDatosTutor").hide();

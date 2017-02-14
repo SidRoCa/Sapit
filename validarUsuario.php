@@ -3,17 +3,11 @@ $conex = "host=localhost port=5432 dbname=sapitbd user=admin password=admin";
 $cnx = pg_connect($conex) or die("<h1>Error de conexion.</h1> " . pg_last_error());
 session_start();
 
-//function quitar($mensaje) {
-//    $nopermitidos = array("'", '\\', '<', '>', "\"");
-//    $mensaje = str_replace($nopermitidos, "", $mensaje);
-//    return $mensaje;
-//}
+
 
 if (trim($_POST["usuario"]) != "" && trim($_POST["password"]) != "") {
-    //eliminar algun caracter en especifico
-    //$usuario = strtolower(quitar($HTTP_POST_VARS["usuario"]));
-    //$password = $HTTP_POST_VARS["password"];
-    $usuario = strtolower(htmlentities($_POST["usuario"], ENT_QUOTES));
+
+    $usuario = htmlentities($_POST["usuario"], ENT_QUOTES);
     $password = $_POST["password"];
     $result = pg_query('SELECT id, password, usuario, tipo, nombre FROM usuarios WHERE usuario=\'' . $usuario . '\'');
     if ($row = pg_fetch_array($result)) {
@@ -45,6 +39,7 @@ if (trim($_POST["usuario"]) != "" && trim($_POST["password"]) != "") {
                 <?php
             }
             if ($row['tipo'] == 'crddepartamental') {
+
                 $_SESSION["tipo_usuario"] = "crddpt";
                 ?>
                 <SCRIPT LANGUAGE="javascript">
@@ -68,7 +63,6 @@ if (trim($_POST["usuario"]) != "" && trim($_POST["password"]) != "") {
                 </SCRIPT> 
                 <?php
             }
-            
         } else {
             echo 'Password incorrecto';
         }

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "tutor") {
+    if ($_SESSION['tipo_usuario'] !== "admin") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,10 +9,10 @@
     }
     require "../../conexion.php";
     $conn = new Connection();
-    if(filter_input(INPUT_POST, 'idTutoriaGrupal')){
-        $idTutoriaGrupal = $_POST['idTutoriaGrupal'];
+    if(filter_input(INPUT_POST, 'idCoordinador')){
+        $idCoordinador = $_POST['idCoordinador'];
         $conn->conectar();
-        $query = 'delete from tutorias_grupal where id='.$idTutoriaGrupal;
+        $query = 'delete from usuarios where id='.$idCoordinador;
         $res = pg_query($query);
         if($res){  
         	echo "ok";

@@ -10,7 +10,6 @@
     }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     ?>
     <h2>Agregar Periodo</h2>
         <form id="formulario">

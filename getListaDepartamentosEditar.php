@@ -10,7 +10,6 @@
     }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     $departamentos = $conn->getListaDepartamentos();
     ?>
     <h2>Editar un departamento</h2>

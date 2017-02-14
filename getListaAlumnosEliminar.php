@@ -5,7 +5,7 @@
         session_start();
         $alumnos = $conn->getListaAlumnos();
     ?>
-    <h2>Eliminar Departamento</h2>
+    <h2>Eliminar Alumno</h2>
     <table id="tablaDatos">
         <tr>
             <th>
@@ -44,7 +44,8 @@
                             window.alert("Eliminado correctamente");
                             irALista();
                         }else{
-                            window.alert("No es posible eliminar este departamento");
+                            alert(msg);
+                            window.alert("No es posible eliminar este alumno");
                         }
                     }).fail(function (jqXHR, textStatus) {
                         if (textStatus === 'timeout') {

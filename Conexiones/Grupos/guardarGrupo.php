@@ -10,7 +10,7 @@
     require "../../conexion.php";
     $conn = new Connection();
     if(filter_input(INPUT_POST, 'nombre') and filter_input(INPUT_POST, 'lugarTutoria') and filter_input(INPUT_POST, 'idPeriodo') 
-            and filter_input(INPUT_POST, 'idTutor1') and filter_input(INPUT_POST, 'idTutor2') and filter_input(INPUT_POST, 'horario')){
+             and filter_input(INPUT_POST, 'horario')){
         $nombre = $_POST['nombre'];
         $lugarTutoria = $_POST['lugarTutoria'];
         $idPeriodo = $_POST['idPeriodo'];
@@ -26,6 +26,7 @@
         	echo "error";
         }
     }else{
-        echo "error";
+        
+        echo "error en filter inputs";
     }
 ?>

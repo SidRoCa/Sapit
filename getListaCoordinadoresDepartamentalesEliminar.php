@@ -10,44 +10,46 @@
     }
     require "conexion.php";
     $conn = new Connection();
-    $departamentos = $conn->getListaDepartamentos();
+    $coordinadoresDepartamentales = $conn->getListaCoordinadoresDepartamentales();
     ?>
-    <h2>Eliminar Departamento</h2>
+    <h2>Eliminar un Coordinador Departamental</h2>
     <table id="tablaDatos">
         <tr>
             <th>
-                Identificador
+                Nombre
             </th>
             <th>
-                Nombre departamento
+                Departamento
             </th>
         </tr>
         <?php
-        foreach ($departamentos as $departamento) {
-            echo ('<tr data-id-departamento ="' . $departamento['id'] . '">');
-            echo('<td>' . $departamento['id'] . '</td>');
-            echo('<td>' . $departamento['nombre'] . '</td>');
+        foreach ($coordinadoresDepartamentales as $coordinadorDepartamental) {
+            echo ('<tr data-id-coordinador ="' . $coordinadorDepartamental['id'] . '">');
+            echo('<td>' . $coordinadorDepartamental['nombre'] . '</td>');
+            $departamento = $conn->getDpto($coordinadorDepartamental['iddpto']);
+            echo('<td>' . $departamento . '</td>');
             echo('</tr>');
         }
         ?>
     </table>
     <script>
         $("#tablaDatos").on("click", "tr", function () {
-            var idString = $(this).attr("data-id-departamento");
+            var idString = $(this).attr("data-id-coordinador");
             if (!(typeof idString == 'undefined')) {
-                var idDepartamento = parseInt(idString);
+                var idCoordinador = parseInt(idString);
                 var eliminar = window.confirm("¿Está seguro que desea eliminar este elemento?");
                 if (eliminar == true) {
+
                     $.ajax({
                         method: "POST",
-                        url: "Conexiones/Departamentos/eliminarDepartamento.php",
-                        data: {idDepartamento: idDepartamento}
+                        url: "Conexiones/CoordinadoresDepartamentales/eliminarCoordinadorDepartamental.php",
+                        data: {idCoordinador: idCoordinador}
                     }).done(function (msg) {
                         if (msg.localeCompare("ok") == 0) {
                             window.alert("Eliminado correctamente");
                             irALista();
                         } else {
-                            window.alert("No es posible eliminar este departamento");
+                            window.alert("No es posible eliminar este coordinador departamental");
                         }
                     }).fail(function (jqXHR, textStatus) {
                         if (textStatus === 'timeout') {
@@ -59,11 +61,11 @@
                 }
             }
         });
-
+        
         function irALista() {
             $.ajax({
                 method: "POST",
-                url: "getListaDepartamentosEliminar.php"
+                url: "getListaCoordinadoresDepartamentalesEliminar.php"
             }).done(function (msg) {
                 $("#mainContenido").hide();
                 $("#actualizarDatosTutor").hide();

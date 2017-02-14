@@ -10,7 +10,6 @@
     }
     require "conexion.php";
     $conn = new Connection();
-    session_start();
     $periodos = $conn->getListaPeriodos();
     ?>
     <h2>Eliminar un periodo</h2>
