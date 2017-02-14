@@ -68,7 +68,13 @@ $conn = new Connection();
                     <li>
                         <strong>Documentos y reportes</strong>
                         <ul>
-                            <li><a href="javascript:void(0);" onclick="clicDiagnosticoGrupo()">Diagnóstico de grupo</a></li>
+                            <li>
+                                Diasnóstigo grupal
+                            <ul>
+                                <li><a href="javascript:void(0);" onclick="clicDiagnosticoGrupo()">Agregar</a></li>
+                                <li><a href="javascript:void(0);" onclick="clicConsultarDiagnosticoGrupo()">Consultar</a></li>
+                            </ul>
+                            </li>
                             <li><a href="javascript:void(0);" onclick="clicPlanAccionTutorial()">Plan de acción tutorial</a></li>
                             <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Reporte semestral del tutor</a></li>
                             <li><a href="javascript:void(0);" onclick="clicActaResultadosObtenidos()">Acta de resultados obtenidos</a></li>
@@ -504,6 +510,44 @@ $conn = new Connection();
         $("#diagnosticoGrupo").show();
         $("#cartaCompromiso").hide();
     }
+
+    function clicConsultarDiagnosticoGrupo() {
+        $("#mainContenido").hide();
+        $("#actualizarDatosTutor").hide();
+        $("#fichaAlumnosTutorados").hide();
+        $("#registroAsistenciaIndividual").hide();
+        $("#registroAsistenciaGrupal").hide();
+        $("#actaResultadosObtenidos").hide();
+        $("#planAccionTutorial").hide();
+        $("#reporteSemestral").hide();
+        $("#diagnosticoGrupo").hide();
+        $("#cartaCompromiso").hide();
+        var idTutor = <?php echo $idTutor ?>;
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGrupos.php",
+            data: {idTutor: idTutor}
+        }).done(function (msg) {
+            $("#fichaAlumnosTutorados").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#cartaCompromiso").hide();
+            $("#reporteSemestral").hide();
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
     function clicRegistroTutoriaGrupal() {
         $("#mainContenido").hide();
         $("#actualizarDatosTutor").hide();
@@ -651,6 +695,7 @@ $conn = new Connection();
 
 
     }
+
     function clicGruposDiagnosticoGrupo(idGrupo) {
         $.ajax({
             method: "POST",

@@ -11,10 +11,53 @@ class Connection {
         $this->conectar();
         $result = pg_query('select grupos.id, grupos.nombre from grupos, tutores where (grupos.id_tutor1 = tutores.id or grupos.id_tutor2 = tutores.id) and tutores.identificador = \'' . $idTutor . '\'');
         $res = array();
-
         while ($row = pg_fetch_array($result)) {
             array_push($res, array('id' => $row['id'], 'nombre' => $row['nombre']));
         }
+        return $res;
+    }
+
+    public function getListaDiagnosticosGruposPorTutor($idTutor){
+        $this->conectar();
+        $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, diagnostico_grupo.id as diagnostico_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnostico_fecha, diagnostico_grupo.semestre as diagnostico_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where grupos.id_tutor1 = '.$idTutor. ' or grupos.id_tutor2 = '.$idTutor.'order by diagnostico_grupo.fecha desc';        
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idGrupo" => $row['grupos_id'], "nombreGrupo" => $row['grupos_nombre'], "idDiagnostico" => $row['diagnostico_id'], "fechaDiagnostico" => $row['diagnostico_fecha'], "semestreDiagnostico" => $row['diagnostico_semestre']));            
+        }
+        return $res;
+
+    }
+
+    public function getDiagnosticoGrupalPorId($idDiagnostico){
+        $this->conectar();
+        $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, grupos.id_tutor1 as grupos_idtutor1, grupos.id_tutor2 as grupos_idtutor2, diagnostico_grupo.id as diagnosticos_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnosticos_fecha, diagnostico_grupo.semestre as diagnosticos_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where diagnostico_grupo.id = '.$idDiagnostico;
+        $result = pg_query($query);
+        $row = pg_fetch_array($result);
+        $numeroAlumnos = $this->getNumeroAlumnos($row['grupos_id']);
+        $idTutor1 = $row['grupos_idtutor1'];
+        $queryTutor1 = 'select tutores.id as tutores_id, tutores.nombres as tutores_nombre, tutores.ap_paterno as tutores_appaterno, tutores.ap_materno as tutores_apmaterno from tutores where id = '.$idTutor1;
+        $resultTutor1 = pg_query($queryTutor1);
+        $rowTutor1 = pg_fetch_array($resultTutor1);
+        $tutor1 = $rowTutor1['tutores_nombre'].' '.$rowTutor1['tutores_appaterno'].' '.$rowTutor1['tutores_apmaterno'];
+        $idTutor2 = $row['grupos_idtutor2'];
+        $queryTutor2 = 'select tutores.id as tutores_id, tutores.nombres as tutores_nombre, tutores.ap_paterno as tutores_appaterno, tutores.ap_materno as tutores_apmaterno from tutores where id = '.$idTutor2;
+        $resultTutor2 = pg_query($queryTutor2);
+        $rowTutor2 = pg_fetch_array($resultTutor2);
+        $tutor2 = $rowTutor2['tutores_nombre'].' '.$rowTutor2['tutores_appaterno'].' '.$rowTutor2['tutores_apmaterno'];
+        $res = array("nombre" =>$row['grupos_nombre'], "fecha"=>$row['diagnosticos_fecha'], "semestre"=>$row['diagnosticos_semestre'], "tutor1"=>$tutor1, "tutor2"=>$tutor2, "noAlumnos" => $numeroAlumnos);
+        $queryDetalleDiagnosticos = 'select det_diagnostico_grupo.fase_tutoria as diagnosticos_fase, 
+        det_diagnostico_grupo.area_evaluacion as diagnosticos_areaevaluacion, det_diagnostico_grupo.instrumento as diagnosticos_instrumento, 
+        det_diagnostico_grupo.rec_analisis_info as diagnosticos_recanalisis, det_diagnostico_grupo.hallazgos as diagnosticos_hallazgos 
+        from det_diagnostico_grupo where id_diagnostico_grupo = '.$idDiagnostico;
+        $resultDetalleDiagnosticos = pg_query($queryDetalleDiagnosticos);
+        $detDiagnosticos = array();
+        while($rowDet = pg_fetch_array($resultDetalleDiagnosticos)){
+            array_push($detDiagnosticos, array("fase"=> $rowDet['diagnosticos_fase'], "areaEvaluacion"=> $rowDet['diagnosticos_areaevaluacion'],
+                "instrumento"=> $rowDet['diagnosticos_instrumento'],"recAnalisis"=> $rowDet['diagnosticos_recanalisis'],
+                "hallazgos"=> $rowDet['diagnosticos_hallazgos']));
+        }
+        array_push($res, $detDiagnosticos);
         return $res;
     }
 
