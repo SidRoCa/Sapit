@@ -29,6 +29,17 @@ class Connection {
 
     }
 
+    public function getListaPlanesAccionPorTutor($idTutor){
+        $this->conectar();
+        $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha from grupos INNER JOIN plan_accion_tutorial ON (grupos.id =plan_accion_tutorial.id_grupo) where grupos.id_tutor1 = '.$idTutor.' or grupos.id_tutor2 = '.$idTutor.' order by plan_accion_tutorial.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idGrupo"=> $row['grupos_id'], "nombreGrupo" =>$row['grupos_nombre'], "idPlan" => $row['plan_id'], "fechaPlan" => $row['plan_fecha']));
+        }
+        return $res;
+    }
+
     public function getDiagnosticoGrupalPorId($idDiagnostico){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, grupos.id_tutor1 as grupos_idtutor1, grupos.id_tutor2 as grupos_idtutor2, diagnostico_grupo.id as diagnosticos_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnosticos_fecha, diagnostico_grupo.semestre as diagnosticos_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where diagnostico_grupo.id = '.$idDiagnostico;
@@ -58,6 +69,35 @@ class Connection {
                 "hallazgos"=> $rowDet['diagnosticos_hallazgos']));
         }
         array_push($res, $detDiagnosticos);
+        return $res;
+    }
+
+    public function getPlanAccionTutorialPorId($idPlan){
+        $this->conectar();
+        $queryPlan = 'select to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, plan_accion_tutorial.id_grupo as plan_idgrupo, grupos.nombre as plan_nombregrupo from grupos INNER JOIN plan_accion_tutorial ON (grupos.id = plan_accion_tutorial.id_grupo) where plan_accion_tutorial.id = '.$idPlan;
+        $resultPlan = pg_query($queryPlan);
+        $rowPlan = pg_fetch_array($resultPlan);
+        $idGrupo = $rowPlan['plan_idgrupo'];
+        $tutores = $this->getTutoresGrupo($idGrupo);
+        $periodo = $this->getPeriodo($idGrupo);
+        $noAlumnos = $this->getNumeroAlumnos($idGrupo);
+        $queryProblematicas = 'select det_plan_accion_tutorial_problematicas.problematica as detplan_problematica, det_plan_accion_tutorial_problematicas.valor as detplan_valor, det_plan_accion_tutorial_problematicas.objetivos as detplan_objetivos, det_plan_accion_tutorial_problematicas.acciones as detplan_acciones from det_plan_accion_tutorial_problematicas where id_plan_accion_tutorial = '.$idPlan;
+        $resultProblematicas = pg_query($queryProblematicas);
+        $problematicas = array();
+        while($rowProb = pg_fetch_array($resultProblematicas)){
+            array_push($problematicas, array("problematica"=> $rowProb['detplan_problematica'], "valor"=> $rowProb['detplan_valor'], "objetivos"=> $rowProb['detplan_objetivos'], "acciones"=> $rowProb['detplan_acciones']));
+        }
+        $queryCalendarizacion = 'select det_plan_accion_tutorial.actividad as detplan_accion, det_plan_accion_tutorial.mes1 as mes1, det_plan_accion_tutorial.mes2 as mes2, det_plan_accion_tutorial.mes3 as mes3, det_plan_accion_tutorial.mes4 as mes4, det_plan_accion_tutorial.mes5 as mes5, det_plan_accion_tutorial.mes6 as mes6 from det_plan_accion_tutorial where det_plan_accion_tutorial.id_plan_accion_tutorial = '.$idPlan;
+        $resultCalendarizacion = pg_query($queryCalendarizacion);
+        $calendarizacion = array();
+        while($rowCal = pg_fetch_array($resultCalendarizacion)){
+            array_push($calendarizacion, array("accion"=> $rowCal['detplan_accion'], "mes1"=> $rowCal['mes1'], "mes2"=> $rowCal['mes2'], "mes3"=> $rowCal['mes3'], "mes4"=> $rowCal['mes4'], "mes5"=> $rowCal['mes5'], "mes6"=> $rowCal['mes6']));
+        }
+        $res = array("tutor1"=> $tutores[0]['nombres'].' '.$tutores[0]['ap_paterno'].' '.$tutores[1]['ap_materno'], "tutor2"=> $tutores[1]['nombres'].' '.$tutores[1]['ap_paterno'].' '.$tutores[1]['ap_materno'],
+            "fecha"=>$rowPlan['plan_fecha'], "nombreGrupo"=> $rowPlan['plan_nombregrupo'], "noAlumnos"=>$noAlumnos, 
+            "semestre"=>$periodo);
+        array_push($res, $problematicas);
+        array_push($res, $calendarizacion);
         return $res;
     }
 
