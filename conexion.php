@@ -29,6 +29,17 @@ class Connection {
 
     }
 
+    public function getListaDiagnosticosDepartamentalesPorCoordinador($nombreCoordinador){
+        $this->conectar();
+        $query = 'select diagnostico_departamental.id as diagnostico_id, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as diagnostico_fecha from diagnostico_departamental where trim(coord_departamental) = trim(\''.$nombreCoordinador.'\')';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idDiagnostico"=>$row['diagnostico_id'], "fecha"=>$row['diagnostico_fecha']));
+        }
+        return $res;
+    }
+
     public function getListaPlanesAccionPorTutor($idTutor){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha from grupos INNER JOIN plan_accion_tutorial ON (grupos.id =plan_accion_tutorial.id_grupo) where grupos.id_tutor1 = '.$idTutor.' or grupos.id_tutor2 = '.$idTutor.' order by plan_accion_tutorial.fecha desc';
@@ -80,6 +91,23 @@ class Connection {
                 "hallazgos"=> $rowDet['diagnosticos_hallazgos']));
         }
         array_push($res, $detDiagnosticos);
+        return $res;
+    }
+
+    public function getDiagnosticoDepartamentalPorId($idDiagnostico){
+        $this->conectar();
+        //getDptoUsuario
+        $query = 'select to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as fecha from diagnostico_departamental where id = '.$idDiagnostico;
+        $result = pg_query($query);
+        $row = pg_fetch_array($result);
+        $res = array("fecha" =>$row['fecha']);
+        $query2 = 'select * from det_diagnostico_departamental where id_diagnostico_departamental = '.$idDiagnostico;
+        $result2 = pg_query($query2);
+        $det = array();
+        while($row2 = pg_fetch_array($result2)){
+            array_push($det, array("fase"=>$row2['fase_tutoria'], "areaEvaluacion" => $row2['area_evaluacion'], "instrumento"=> $row2['instrumento'], "recanalisis"=>$row2['recoleccion_analisis_informacion'], "hallazgos"=>$row2['hallazgos']));
+        }
+        array_push($res, $det);
         return $res;
     }
 

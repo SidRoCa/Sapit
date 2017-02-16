@@ -69,7 +69,7 @@ $conn = new Connection();
                         <strong>Documentos y reportes</strong>
                         <ul>
                             <li>
-                                Diasnóstigo grupal
+                                Diasnóstico grupal
                             <ul>
                                 <li><a href="javascript:void(0);" onclick="clicDiagnosticoGrupo()">Agregar</a></li>
                                 <li><a href="javascript:void(0);" onclick="clicConsultarDiagnosticoGrupo()">Consultar</a></li>
