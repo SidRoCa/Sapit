@@ -40,6 +40,17 @@ class Connection {
         return $res;
     }
 
+    public function getListaReportesSemestralesPorTutor($idTutor){
+        $this->conectar();
+        $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, reporte_tutor.id as reporte_id, to_char(reporte_tutor.fecha, \'DD/MM/YYYY\') as reporte_fecha from grupos INNER JOIN reporte_tutor ON (grupos.id = reporte_tutor.id_grupo) where reporte_tutor.id_tutor = '.$idTutor;
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idGrupo" => $row['grupos_id'], "nombreGrupo"=> $row['grupos_nombre'], "idReporte"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha']));
+        }
+        return $res;
+    }
+
     public function getDiagnosticoGrupalPorId($idDiagnostico){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, grupos.id_tutor1 as grupos_idtutor1, grupos.id_tutor2 as grupos_idtutor2, diagnostico_grupo.id as diagnosticos_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnosticos_fecha, diagnostico_grupo.semestre as diagnosticos_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where diagnostico_grupo.id = '.$idDiagnostico;
@@ -99,6 +110,30 @@ class Connection {
         array_push($res, $problematicas);
         array_push($res, $calendarizacion);
         return $res;
+    }
+
+    public function getReporteSemestralPorId($idReporte){
+        $this->conectar();
+        $queryReporte = 'select reporte_tutor.id_tutor as reporte_idtutor, to_char(reporte_tutor.fecha, \'DD/MM/YYYY\') as reporte_fecha, reporte_tutor.observaciones as reporte_observaciones, grupos.nombre as grupos_nombre from reporte_tutor INNER JOIN grupos ON (reporte_tutor.id_grupo = grupos.id) where reporte_tutor.id = '.$idReporte;
+        $resultReporte = pg_query($queryReporte);
+        $rowReporte = pg_fetch_array($resultReporte);
+        $queryDet = 'select det_reporte_tutor.tutoria_grupal as rep_tutoriagrupal, det_reporte_tutor.tutoria_individual 
+        as rep_tutoriaindividual, det_reporte_tutor.canalizado as rep_canalizado, det_reporte_tutor.area_canalizada as 
+        rep_areacanalizada, alumnos.nombres as alumno_nombres, alumnos.ap_paterno as alumno_appaterno, alumnos.ap_materno as 
+        alumnos_apmaterno from det_reporte_tutor INNER JOIN alumnos ON (det_reporte_tutor.id_alumno = alumnos.id) where 
+        det_reporte_tutor.id_reporte_tutor = '.$idReporte;
+        $resultDet = pg_query($queryDet);
+        $detRep = array();
+        while($rowDet = pg_fetch_array($resultDet)){
+            array_push($detRep, array("alumno"=>$rowDet['alumno_nombres'].' '.$rowDet['alumno_appaterno'].' '.$rowDet['alumnos_apmaterno'],
+                "tutoriaGrupal"=>$rowDet['rep_tutoriagrupal'], "tutoriaIndividual"=>$rowDet['rep_tutoriaindividual'],"canalizado"=>$rowDet['rep_canalizado'],
+                "areaCanalizada"=>$rowDet['rep_areacanalizada']));
+        }
+        $tutor = $this->getTutor($rowReporte['reporte_idtutor']);
+        $tutorRes = $tutor['nombres'].' '.$tutor['apPaterno'].' '.$tutor['apMaterno'];
+        $res = array("fecha"=> $rowReporte['reporte_fecha'], "tutor"=>$tutorRes, "grupo"=>$rowReporte['grupos_nombre'], "observaciones"=> $rowReporte['reporte_observaciones']);
+        array_push($res, $detRep);
+        return $res; 
     }
 
     public function getTutor($idTutor) {

@@ -82,7 +82,14 @@ $conn = new Connection();
                                 <li><a href="javascript:void(0);" onclick="clicConsultarPlanAccionTutorial()">Consultar</a></li>
                             </ul>
                             </li>
-                            <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Reporte semestral del tutor</a></li>
+                            <li>
+                                Reporte semestral del tutor
+                            <ul>
+                                <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Agregar</a></li>
+                                <li><a href="javascript:void(0);" onclick="clicConsultarReporteSemestral()">Consultar</a></li>
+                            </ul>
+                            </li>
+                            
                             <li><a href="javascript:void(0);" onclick="clicActaResultadosObtenidos()">Acta de resultados obtenidos</a></li>
                             <li><a href="javascript:void(0);" onclick="clicCartaCompromiso()">Carta compromiso</a></li>
                         </ul>
@@ -568,6 +575,43 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaPlanesAccionTutorial.php",
+            data: {idTutor: idTutor}
+        }).done(function (msg) {
+            $("#fichaAlumnosTutorados").hide();
+            $("#actualizarDatosTutor").hide();
+            $("#registroAsistenciaGrupal").hide();
+            $("#registroAsistenciaIndividual").hide();
+            $("#actaResultadosObtenidos").hide();
+            $("#diagnosticoGrupo").hide();
+            $("#planAccionTutorial").hide();
+            $("#cartaCompromiso").hide();
+            $("#reporteSemestral").hide();
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicConsultarReporteSemestral() {
+        $("#mainContenido").hide();
+        $("#actualizarDatosTutor").hide();
+        $("#fichaAlumnosTutorados").hide();
+        $("#registroAsistenciaIndividual").hide();
+        $("#registroAsistenciaGrupal").hide();
+        $("#actaResultadosObtenidos").hide();
+        $("#planAccionTutorial").hide();
+        $("#reporteSemestral").hide();
+        $("#diagnosticoGrupo").hide();
+        $("#cartaCompromiso").hide();
+        var idTutor = <?php echo $idTutor ?>;
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestrales.php",
             data: {idTutor: idTutor}
         }).done(function (msg) {
             $("#fichaAlumnosTutorados").hide();
