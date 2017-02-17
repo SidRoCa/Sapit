@@ -40,6 +40,18 @@ class Connection {
         return $res;
     }
 
+    public function getListaPlanesAccionDepartamentalPorCoordinador($nombreCoordinador){
+        $this->conectar();
+        $query = 'select id, to_char(fecha, \'DD/MM/YYYY\') as fecha from plan_accion_tutorial_departamental where trim(coord_departamental) = trim(\''.$nombreCoordinador.'\') order by fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idPlan" => $row['id'], "fecha"=>$row['fecha']));
+        }
+        
+        return $res;
+    }
+
     public function getListaPlanesAccionPorTutor($idTutor){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha from grupos INNER JOIN plan_accion_tutorial ON (grupos.id =plan_accion_tutorial.id_grupo) where grupos.id_tutor1 = '.$idTutor.' or grupos.id_tutor2 = '.$idTutor.' order by plan_accion_tutorial.fecha desc';
@@ -137,6 +149,35 @@ class Connection {
             "semestre"=>$periodo);
         array_push($res, $problematicas);
         array_push($res, $calendarizacion);
+        return $res;
+    }
+
+    public function getPlanAccionTutorialDepartamentalPorId($idPlan){
+        $this->conectar();
+        $queryPlan = 'select to_char(plan_accion_tutorial_departamental.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        plan_accion_tutorial_departamental.evaluacion as plan_evaluacion, plan_accion_tutorial_departamental.id_departamento as plan_iddepartamento, 
+        departamentos.nombre as plan_departamento from plan_accion_tutorial_departamental INNER JOIN departamentos ON 
+        (plan_accion_tutorial_departamental.id_departamento = departamentos.id) where plan_accion_tutorial_departamental.id = '.$idPlan;
+        $resultPlan = pg_query($queryPlan);
+        $rowPlan = pg_fetch_array($resultPlan);
+        $res = array("fecha"=> $rowPlan['plan_fecha'], "evaluacion" => $rowPlan['plan_evaluacion'], "idDepartamento" => $rowPlan['plan_iddepartamento'],
+            "departamento" => $rowPlan['plan_departamento']);
+        //problematica, valor, objetivos, acciones, id_plan_accion_tutorial_departamental
+        $queryProblematicas = 'select problematica, valor, objetivos, acciones from det_plan_accion_tutorial_departamental_problematicas where id_plan_accion_tutorial_departamental = '.$idPlan;
+        $resultProblematicas = pg_query($queryProblematicas);
+        $problematicas = array();
+        while($rowProb = pg_fetch_array($resultProblematicas)){
+            array_push($problematicas, array("problematica"=> $rowProb['problematica'], "valor" => $rowProb['valor'],
+                "objetivos" => $rowProb['objetivos'], "acciones" => $rowProb['acciones']));
+        }
+        $queryDet = 'select actividad, mes1, mes2, mes3, mes4, mes5, mes6 from det_plan_accion_tutorial_departamental where id_plan_accion_tutorial_departamental = '.$idPlan;
+        $resultDet = pg_query($queryDet);
+        $det = array();
+        while($rowDet = pg_fetch_array($resultDet)){
+            array_push($det, array("actividad"=> $rowDet['actividad'], "mes1"=>$rowDet['mes1'], "mes2"=>$rowDet['mes2'], "mes3"=>$rowDet['mes3'], "mes4"=>$rowDet['mes4'], "mes5"=>$rowDet['mes5'], "mes6"=>$rowDet['mes6']));
+        }
+        array_push($res, $problematicas);
+        array_push($res, $det);
         return $res;
     }
 
