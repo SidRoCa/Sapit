@@ -74,6 +74,16 @@ class Connection {
         return $res;
     }
 
+    public function getListaPlanesDesarrollarDiagnosticoDptPorDepartamento($idDepartamento){
+        $this->conectar();
+        $query = 'select id,to_char(fecha, \'DD/MM/YYYY\') as fecha from planeacion_diagnostico_departamental where id_departamento = '.$idDepartamento.' order by fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idPlan" => $row['id'],"fecha" => $row['fecha']));
+        }
+        return $res;
+    }
     public function getDiagnosticoGrupalPorId($idDiagnostico){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, grupos.id_tutor1 as grupos_idtutor1, grupos.id_tutor2 as grupos_idtutor2, diagnostico_grupo.id as diagnosticos_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnosticos_fecha, diagnostico_grupo.semestre as diagnosticos_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where diagnostico_grupo.id = '.$idDiagnostico;
@@ -203,6 +213,34 @@ class Connection {
         $res = array("fecha"=> $rowReporte['reporte_fecha'], "tutor"=>$tutorRes, "grupo"=>$rowReporte['grupos_nombre'], "observaciones"=> $rowReporte['reporte_observaciones']);
         array_push($res, $detRep);
         return $res; 
+    }
+
+    public function getPlanDesarrollarDiagnosticoDepartamentalPorId($idPlan){
+        $this->conectar();
+        $queryPlan = 'select to_char(planeacion_diagnostico_departamental.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        departamentos.nombre as plan_departamento, departamentos.id as departamento_id from planeacion_diagnostico_departamental INNER JOIN departamentos 
+        ON (planeacion_diagnostico_departamental.id_departamento = departamentos.id) where planeacion_diagnostico_departamental.id = '.$idPlan;
+        $resultPlan = pg_query($queryPlan);
+        $rowPlan = pg_fetch_array($resultPlan);
+        $res = array("idDepartamento" => $rowPlan['departamento_id'],"fecha" => $rowPlan['plan_fecha'], "departamento" => $rowPlan['plan_departamento']);
+        $queryProblematicas = 'select id, problema from det_planeacion_diagnostico_departamental where id_planeacion_diagnostico_departamental = '.$idPlan;
+        $resultProblematicas = pg_query($queryProblematicas);
+        $problematicas = array();
+        while($rowProb = pg_fetch_array($resultProblematicas)){
+            $proble = array("id"=>$rowProb['id'], "problema" => $rowProb['problema']);
+            $idProb = $rowProb['id'];
+            $queryDet = 'select det_planeacion_diagnostico_departamental_grupos.valor as det_valor, grupos.nombre as grupo_nombre, grupos.id as grupo_id from 
+            det_planeacion_diagnostico_departamental_grupos INNER JOIN grupos ON (det_planeacion_diagnostico_departamental_grupos.id_grupo = grupos.id) where det_planeacion_diagnostico_departamental_grupos.id_det_planeacion_diagnostico_departamental = '.$idProb;
+            $resultDet = pg_query($queryDet);
+            $det = array();
+            while($rowDet = pg_fetch_array($resultDet)){
+                array_push($det, array("idGrupo" => $rowDet['grupo_id'], "nombreGrupo" => $rowDet['grupo_nombre'], "valor"=>$rowDet['det_valor']));
+            }
+            array_push($proble, $det);
+            array_push($problematicas, $proble);
+        }
+        array_push($res, $problematicas);
+        return $res;
     }
 
     public function getTutor($idTutor) {

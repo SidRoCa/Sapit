@@ -48,7 +48,13 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicConsultarPlanAccionTutorial()">Consultar</a></li>
                         </ul>
                         </li>
-                        <li><a href="javascript:void(0);" onclick="clicPlanDesarrollarDiagnosticoDpt()">Plan para desarrollar el diagnóstico departamental</a></li>
+                        <li>
+                            Plan para desarrollar el diagnóstico departamental
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicPlanDesarrollarDiagnosticoDpt()">Agregar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarPlanDesarrollarDiagnosticoDpt()">Consultar</a></li>
+                        </ul>
+                        </li>
                         <li><a href="javascript:void(0);" onclick="clicReporteSemestralCoordDpt()">Reporte semestral del coordinador departamental</a></li>
                     </ul>
                 </ul>
@@ -135,6 +141,22 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaPlanesAccionTutorialDepartamental.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicConsultarPlanDesarrollarDiagnosticoDpt() {
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesDesarrollarDiagnosticoDpt.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);
