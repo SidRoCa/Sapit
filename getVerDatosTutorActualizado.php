@@ -12,33 +12,32 @@
     }
 
     $idTutor = ($_POST['idTutor']);
-    $nombres = ($_POST['nombres']);
+    $nombres = ($_POST['nombre']);
     $apPaterno = ($_POST['apPaterno']);
     $apMaterno = ($_POST['apMaterno']);
     $correo = ($_POST['correo']);
     $telefono = ($_POST['telefono']);
-    $lugar = ($_POST['lugar']);
-    $horario = ($_POST['horario']);
+    $ciudad = ($_POST['ciudad']);
+    $domicilio = ($_POST['domicilio']);
+    $identificador = ($_POST['identificador']);
+    $nip = ($_POST['nip']);
+    $identificadorAnterior = ($_POST['identificadorAnterior']);
+    $nipAnterior = ($_POST['nipAnterior']);
 
-    $res = $conn->actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $lugar, $horario);
+    $res = $conn->actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $ciudad, $domicilio, $identificador, $nip, $identificadorAnterior, $nipAnterior);
     if ($res) {
         echo('Exito!');
-        $idTutor = intval($_POST['idTutor']);
-        $tutor = $conn->getTutor($idTutor);
     } else {
         echo('Error');
     }
     ?>
-
-
-    <h2>DATOS DEL DOCENTE TUTOR</h2>
-    <p><strong>Nombres: </strong><?php echo($tutor['nombres'] . ' ' . $tutor['apPaterno'] . ' ' . $tutor['apMaterno']); ?></p>
-    <p><strong>Correo electrónico: </strong><?php echo($tutor['correo']); ?></p>
-    <p><strong>Departamento al que está adscrito: </strong><?php echo($tutor['nombreDpto']); ?></p>
-    <p><strong>Teléfono: </strong><?php echo($tutor['telefono']); ?></p>
-    <p><strong>Lugar tutorías: </strong><?php echo($tutor['lugarTutoria']); ?></p>
-    <p><strong>Horario tutorías: </strong><?php echo($tutor['horario']); ?></p>
-    <p><strong>Grupo tutorado: </strong><?php echo($tutor['nombreGrupo']); ?></p>
+    Nombre : <?php echo($nombres . ' ' . $apPaterno . ' ' . $apMaterno); ?></br>
+    Correo : <?php echo($correo); ?></br>
+    Telefono : <?php echo($telefono); ?></br>
+    Ciudad : <?php echo($ciudad); ?></br>
+    Domicilio : <?php echo($domicilio); ?></br>
+    Identificador : <?php echo($identificador); ?></br>
+    
     <button onclick="volver()">Volver</button>
     <script>
 

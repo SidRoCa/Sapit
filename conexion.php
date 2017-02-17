@@ -394,14 +394,26 @@ class Connection {
         return $res;
     }
 
-    public function actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $lugar, $horario) {
+    public function actualizarDatosTutor($idTutor, $nombres, $apPaterno, $apMaterno, $correo, $telefono, $ciudad, $domicilio, $identificador, $nip, $identificadorAnterior, $nipAnterior) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
 
-        $result = pg_query('update tutores set nombres = \'' . $nombres . '\', ap_paterno = \'' . $apPaterno . '\', ap_materno = \'' . $apMaterno . '\', correo = \'' . $correo . '\', telefono = \'' . $telefono . '\' where id = ' . $idTutor);
-
-        $result = pg_query('update grupos set lugar_tutoria = \'' . $lugar . '\', horario = \'' . $horario . '\' where id_tutor1 = ' . $idTutor . ' or id_tutor2 = ' . $idTutor);
-
+        $result = pg_query('update tutores set nombres = \'' . $nombres . '\', ap_paterno = \'' . $apPaterno . '\', ap_materno = \'' . $apMaterno . '\', correo = \'' . $correo . '\', telefono = \'' . $telefono . '\', cuidad = \'' . $ciudad . '\', domicilio = \'' . $domicilio . '\', identificador = \'' . $identificador . '\', nip = \'' . $nip . '\' where id = ' . $idTutor);
+        if($result){
+            $queryUsuario = 'update usuarios set usuario = \''.$identificador.'\', password = \''.$nip.'\', nombre = \''.$nombres.' '.$apPaterno.' '.$apMaterno.'\' where usuario = \''.$identificadorAnterior.'\' and password = \''.$nipAnterior.'\'';
+            $res2 = pg_query($queryUsuario);
+            if($res2){
+                pg_query('commit') or die("Ocurrió un error al guardar los datos en el sistema");
+                echo "ok";
+            }else{
+                pg_query('rollback');
+                echo 'error';
+            }
+        }else{
+        	echo "error";
+        }
+        
+        
         pg_query('commit') or die('Ocurrió un error durante la transacción');
         return $result;
     }

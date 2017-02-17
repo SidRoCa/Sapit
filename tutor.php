@@ -195,20 +195,61 @@ $conn = new Connection();
                     <h2>DATOS DEL DOCENTE TUTOR</h2>
                     <?php
                     $idTutor = intval($_SESSION['id_usuario']);
-                    $tutor = $conn->getTutor($idTutor);
+                    $tutor = $conn->getTutorPorId($idTutor);
                     ?>
                     <input type="text" id="idTutor" value="<?php echo ($idTutor); ?>" hidden>
-                    <p><strong>Nombres: </strong><input type="text" id="nombres" value="<?php echo($tutor['nombres']); ?>"></p>
-                    <p><strong>Apellido paterno: </strong><input type="text" id="apPaterno" value="<?php echo($tutor['apPaterno']); ?>"></p>
-                    <p><strong>Apellido materno: </strong><input type="text" id="apMaterno" value="<?php echo($tutor['apMaterno']); ?>"></p>
-                    <p><strong>Correo electrónico: </strong><input type="text" id="correo" value="<?php echo($tutor['correo']); ?>"></p>
-                    <p><strong>Departamento al que está adscrito: </strong><?php echo($tutor['nombreDpto']); ?></p>
-                    <p><strong>Teléfono: </strong><input type="text" id="telefono" value="<?php echo($tutor['telefono']); ?>"></p>
-                    <p><strong>Lugar tutorías: </strong> <input type="text" id="lugar" value="<?php echo($tutor['lugarTutoria']); ?>"> </p>
-                    <p><strong>Horario tutorías: </strong> <input type="text" id="horario" value="<?php echo($tutor['horario']); ?>"></p>
-                    <p><strong>Grupo tutorado: </strong><?php echo($tutor['nombreGrupo']); ?></p>
-                    <button onclick="clicGuardarDatosTutor()">Guardar</button>
-                    <button onclick="clicCancelar()">Cancelar</button>
+
+                    <label for = "nombres">
+                        Nombres : *
+                    </label>
+                    <input type="text" name = "nombres" id="txtNombre" value="<?php echo($tutor['nombre']); ?>"/></br>
+                    <label for = "apPaterno">
+                        Ap. Paterno : *
+                    </label>
+                    <input type="text" name = "apPaterno" id="txtApPaterno" value="<?php echo($tutor['apPaterno']); ?>"/></br>
+                    <label for = "apMaterno">
+                        Ap. Materno : *
+                    </label>
+                    <input type="text" name = "apMaterno" id="txtApMaterno" value="<?php echo($tutor['apMaterno']); ?>"/></br>
+                    <label for = "correo">
+                        Correo :
+                    </label>
+                    <input type="text" name = "correo" id="txtCorreo" value="<?php echo($tutor['correo']); ?>"/></br>
+
+
+
+                    <label for = "telefono">
+                        Telefono : 
+                    </label>
+                    <input type="text" name = "telefono" id="txtTelefono" value="<?php echo($tutor['telefono']); ?>"/></br>
+                    <label for = "ciudad">
+                        Ciudad : 
+                    </label>
+                    <input type="text" name = "ciudad" id="txtCiudad" value="<?php echo($tutor['ciudad']); ?>"/></br>
+                    <label for = "domicilio">
+                        Domicilio : 
+                    </label>
+                    <input type="text" name = "domicilio" id="txtDomicilio" value="<?php echo($tutor['domicilio']); ?>"/></br>
+                    <label for = "identificador">
+                        Identificador : *
+                    </label>
+                    <input type="text" name = "identificador" id="txtIdentificador" value="<?php echo($tutor['identificador']); ?>"/></br>
+                    <label for = "nip">
+                        NIP : *
+                    </label>
+                    <input type="password" name = "nip" id="txtNip" value="<?php echo($tutor['nip']); ?>"/></br>
+                    <label for = "nipComp">
+                        NIP (de nuevo) : *
+                    </label>
+                    <input type="password" name = "nipComp" id="txtNipComp" value="<?php echo($tutor['nip']); ?>"/></br>
+                    <button onclick="clicGuardarDatosTutor()" id="btnGuardar">
+                        Aceptar
+                    </button>
+                    <button onclick="clicCancelar()" id="btnCancelar">
+                        Cancelar
+                    </button>
+                    <p id="txtEstado" hidden>
+                    </p>
                 </div>
             </div>
         </div>
@@ -291,7 +332,8 @@ $conn = new Connection();
             } else {
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
-        });5
+        });
+        5
     }
     function clicVerListaTutoriasGrupalesEliminar() {
         $.ajax({
@@ -317,7 +359,8 @@ $conn = new Connection();
             } else {
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
-        });5
+        });
+        5
     }
     function clicVerListaTutoriasIndividualesEliminar() {
         $.ajax({
@@ -373,30 +416,54 @@ $conn = new Connection();
         });
     }
     function clicGuardarDatosTutor() {
-        $.ajax({
-            method: "POST",
-            url: "getVerDatosTutorActualizado.php",
-            data: {idTutor: $('#idTutor').val(), nombres: $('#nombres').val(), apPaterno: $('#apPaterno').val(), apMaterno: $('#apMaterno').val(), correo: $('#correo').val(), telefono: $('#telefono').val(), lugar: $('#lugar').val(), horario: $('#horario').val()}
-        }).done(function (msg) {
-            $("#mainContenido").hide();
-            $("#actualizarDatosTutor").hide();
-            $("#registroAsistenciaIndividual").hide();
-            $("#registroAsistenciaGrupal").hide();
-            $("#diagnosticoGrupo").hide();
-            $("#planAccionTutorial").hide();
-            $("#reporteSemestral").hide();
-            $("#actaResultadosObtenidos").hide();
-            $("#cartaCompromiso").hide();
-            $("#mainContenido").html(msg);
-            $("#mainContenido").show();
-        }).fail(function (jqXHR, textStatus) {
-            if (textStatus === 'timeout') {
-                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
-            } else {
-                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
-            }
-        });
+        var idTutor = <?php echo ($idTutor); ?>;
+        var nombre = $("#txtNombre");
+        var apPaterno = $("#txtApPaterno");
+        var apMaterno = $("#txtApMaterno");
+        var correo = $("#txtCorreo");
+        var telefono = $("#txtTelefono");
+        var ciudad = $("#txtCiudad");
+        var domicilio = $("#txtDomicilio");
+        var identificador = $("#txtIdentificador");
+        var nip = $("#txtNip");
+        var nipComp = $("#txtNipComp");
+        if (!nombre.val() || !apPaterno.val() || !apMaterno.val() || !nip.val() || !identificador.val() || !nipComp.val()) {
+            window.alert("Todos los campos con * son obligatorios");
+        } else {
 
+            if (nip.val().localeCompare(nipComp.val()) == 0) {
+                $.ajax({
+                    method: "POST",
+                    url: "getVerDatosTutorActualizado.php",
+                    data: {idTutor: idTutor, nombre: nombre.val(), apPaterno: apPaterno.val(), apMaterno: apMaterno.val(),
+                        correo: correo.val(), telefono: telefono.val(), ciudad: ciudad.val(), domicilio: domicilio.val(), 
+                        identificador: identificador.val(), nip: nip.val(), identificadorAnterior: <?php echo($tutor['identificador']); ?>, nipAnterior: <?php echo($tutor['nip']); ?>}
+                }).done(function (msg) {
+
+                    $("#mainContenido").hide();
+                    $("#actualizarDatosTutor").hide();
+                    $("#registroAsistenciaIndividual").hide();
+                    $("#registroAsistenciaGrupal").hide();
+                    $("#diagnosticoGrupo").hide();
+                    $("#planAccionTutorial").hide();
+                    $("#reporteSemestral").hide();
+                    $("#actaResultadosObtenidos").hide();
+                    $("#cartaCompromiso").hide();
+                    $("#mainContenido").html(msg);
+                    $("#mainContenido").show();
+
+                }).fail(function (jqXHR, textStatus) {
+                    if (textStatus === 'timeout') {
+                        $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+                    } else {
+                        $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+                    }
+                });
+            } else {
+                window.alert("EL nip y la comprobación no coinciden");
+            }
+
+        }
 
     }
     function clicActualizarDatosTutor() {

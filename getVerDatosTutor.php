@@ -14,16 +14,17 @@
     <h2>DATOS DEL DOCENTE TUTOR</h2>
     <?php
     $idTutor = intval($_POST['idTutor']);
-    $tutor = $conn->getTutor($idTutor);
+    $tutor = $conn->getTutorporId($idTutor);
     ?>
-
-    <p><strong>Nombres: </strong><?php echo($tutor['nombres'] . ' ' . $tutor['apPaterno'] . ' ' . $tutor['apMaterno']); ?></p>
-    <p><strong>Correo electrónico: </strong><?php echo($tutor['correo']); ?></p>
-    <p><strong>Departamento al que está adscrito: </strong><?php echo($tutor['nombreDpto']); ?></p>
-    <p><strong>Teléfono: </strong><?php echo($tutor['telefono']); ?></p>
-    <p><strong>Lugar tutorías: </strong><?php echo($tutor['lugarTutoria']); ?></p>
-    <p><strong>Horario tutorías: </strong><?php echo($tutor['horario']); ?></p>
-    <p><strong>Grupo tutorado: </strong><?php echo($tutor['nombreGrupo']); ?></p>
+   
+    <div>
+        Nombre : <?php echo($tutor['nombre'].' '.$tutor['apPaterno'].' '.$tutor['apMaterno']); ?></br>
+        Correo : <?php echo($tutor['correo']); ?></br>
+        Telefono : <?php echo($tutor['telefono']); ?></br>
+        Ciudad : <?php echo($tutor['ciudad']); ?></br>
+        Domicilio : <?php echo($tutor['domicilio']); ?></br>
+        Identificador : <?php echo($tutor['identificador']); ?></br>
+    </div>
     <button onclick="cancelar()">Volver</button>
     <script>
 
