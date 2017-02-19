@@ -9,6 +9,7 @@ if ($_SESSION['tipo_usuario'] !== "crddpt") {
 }
 require "conexion.php";
 $conn = new Connection();
+
 ?>
 <html>
     <head>
@@ -56,6 +57,12 @@ $conn = new Connection();
                         </ul>
                         </li>
                         <li><a href="javascript:void(0);" onclick="clicReporteSemestralCoordDpt()">Reporte semestral del coordinador departamental</a></li>
+                        <li>
+                            Diagnósticos grupales
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticosGrupos()">Editar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                 </ul>
             </div>
@@ -202,6 +209,22 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
+    }
+
+    function clicEditarDiagnosticosGrupos(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGruposEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
     }
 
 </script>

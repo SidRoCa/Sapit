@@ -28,6 +28,21 @@ class Connection {
         return $res;
 
     }
+    
+    public function getListaDiagnosticosGruposPorDepartamento($idDepartamento){
+        $this->conectar();
+        $query = 'select diagnostico_grupo.id as diagnostico_id, grupos.nombre as diagnostico_grupo, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') 
+        as diagnostico_fecha, diagnostico_grupo.semestre as diagnostico_semestre, tutores.nombres ||\' \'||tutores.ap_paterno ||\' \'|| tutores.ap_materno 
+        as tutor_nombre from diagnostico_grupo INNER JOIN grupos ON (diagnostico_grupo.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor1 = tutores.id) 
+        where tutores.id_departamento = '.$idDepartamento.' order by diagnostico_grupo.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idDiagnostico"=>$row['diagnostico_id'], "grupo"=>$row['diagnostico_grupo'], "fecha"=>
+                $row['diagnostico_fecha'], "semestre"=>$row['diagnostico_semestre'], "tutor"=>$row['tutor_nombre']));
+        }
+        return $res;
+    }
 
     public function getListaDiagnosticosDepartamentalesPorCoordinador($nombreCoordinador){
         $this->conectar();

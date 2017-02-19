@@ -39,7 +39,6 @@
                 var idCoordinador = parseInt(idString);
                 var eliminar = window.confirm("¿Está seguro que desea eliminar este elemento?");
                 if (eliminar == true) {
-
                     $.ajax({
                         method: "POST",
                         url: "Conexiones/CoordinadoresDepartamentales/eliminarCoordinadorDepartamental.php",
