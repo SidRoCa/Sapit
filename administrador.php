@@ -64,21 +64,21 @@ $conn = new Connection();
                 </ul>
                 <ul>
                     <li>
-                        <strong>Grupos</strong>
-                        <ul>
-                            <li><a href="javascript:void(0);" onclick="clicAgregarGrupo()">Agregar Grupo</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEditarGrupo()">Editar Grupo</a></li>
-                            <li><a href="javascript:void(0);" onclick="clicEliminarGrupo()">Eliminar Grupo</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
                         <strong>Carreras</strong>
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicAgregarCarrera()">Agregar Carrera</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEditarCarrera()">Editar Carrera</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarCarrera()">Eliminar Carrera</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <strong>Grupos</strong>
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicAgregarGrupo()">Agregar Grupo</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarGrupo()">Editar Grupo</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarGrupo()">Eliminar Grupo</a></li>
                         </ul>
                     </li>
                 </ul>

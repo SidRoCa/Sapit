@@ -479,16 +479,10 @@ $conn = new Connection();
         $("#cartaCompromiso").hide();
     }
     function clicCancelar() {
-        $("#mainContenido").hide();
-        $("#actualizarDatosTutor").hide();
-        $("#fichaAlumnosTutorados").hide();
-        $("#registroAsistenciaIndividual").hide();
-        $("#registroAsistenciaGrupal").hide();
-        $("#diagnosticoGrupo").hide();
-        $("#actaResultadosObtenidos").hide();
-        $("#planAccionTutorial").hide();
-        $("#reporteSemestral").hide();
-        $("#cartaCompromiso").hide();
+        
+        
+        clicVerDatosTutor(<?php echo($idTutor);?>);
+        
     }
     function clicGruposActaResultadosObtenidos(idGrupo) {
         $.ajax({

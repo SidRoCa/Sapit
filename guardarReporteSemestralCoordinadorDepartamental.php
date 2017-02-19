@@ -95,6 +95,9 @@
             <td>Observaciones: <?php echo($observaciones) ?></td>
         </tr>
     </table>
+
+    <button onclick="imprimir()">imprimir</button>
+    <button onclick="volver()">Volver</button>
 </div>
 <script>
     function volver() {

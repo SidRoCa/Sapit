@@ -17,7 +17,6 @@
     ?>
     <h2>PROGRAMA INSTITUCIONAL DE TUTORÍAS<br>ACTA DE RESULTADOS OBTENIDOS</h2>
     <p>Carrera: <?php echo($nombreCarrera); ?> Grupo: <?php echo($nombreGrupo); ?> </p>
-
     <table>
         <tr>
             <th></th>
@@ -35,8 +34,16 @@
             echo ('<td>' . $cnt . '</td>');
             echo ('<td>' . $alumno['no_control'] . '</td>');
             echo ('<td>' . $alumno['nombres'] . ' ' . $alumno['ap_paterno'] . ' ' . $alumno['ap_materno'] . '</td>');
-            echo ('<td><input type = "text"></td>');
-            echo ('<td><input type = "text"></td>');
+            if($alumno['calificacion_final_1'] != null){
+                echo ('<td><input type = "text" value = "'.$alumno['calificacion_final_1'].'" disabled></td>');
+            }else{
+                echo ('<td><input type = "text"></td>');
+            }
+            if($alumno['calificacion_final_2'] != null){
+                echo ('<td><input type = "text" value = "'.$alumno['calificacion_final_2'].'" disabled></td>');
+            }else{
+                echo ('<td><input type = "text"></td>');
+            }
             echo ('<td><input type = "text"></td>');
             echo ('</tr>');
             $cnt++;

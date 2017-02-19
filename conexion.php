@@ -341,6 +341,19 @@ class Connection {
         }
         return $res;
     }
+    public function getCantTutoriasGrupalesPorGrupo($idGrupo) {
+        $this->conectar();
+        $result = pg_query('select count(*) as cnt from tutorias_grupal where id_grupo= ' . $idGrupo);
+        $res = pg_fetch_array($result);
+        
+        return $res['cnt'];
+    }
+    public function getCantTutoriasIndividualesPorTutor($idTutor) {
+        $this->conectar();
+        $result = pg_query('select count(*) as cnt from tutorias_individual where id_tutor= ' . $idTutor);
+        $res = pg_fetch_array($result);
+        return $res['cnt'];
+    }
 
     public function getListaTutoriasGrupalesPorTutor($idTutor) {
         $this->conectar();
@@ -355,6 +368,15 @@ class Connection {
     public function getListaGrupos() {
         $this->conectar();
         $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos');
+        $res = array();
+        while ($row = pg_fetch_array($result)) {
+            array_push($res, array("id" => $row['id'], "nombre" => $row['nombre'], "lugarTutoria" => $row['lugar_tutoria'], "idPeriodo" => $row['id_periodo'], "idTutor1" => $row['id_tutor1'], "idTutor2" => $row['id_tutor2'], "horario" => $row['horario']));
+        }
+        return $res;
+    }
+    public function getListaGruposPorCarrera($idCarrera) {
+        $this->conectar();
+        $result = pg_query('select id, nombre , lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos where id_carrera = '.$idCarrera);
         $res = array();
         while ($row = pg_fetch_array($result)) {
             array_push($res, array("id" => $row['id'], "nombre" => $row['nombre'], "lugarTutoria" => $row['lugar_tutoria'], "idPeriodo" => $row['id_periodo'], "idTutor1" => $row['id_tutor1'], "idTutor2" => $row['id_tutor2'], "horario" => $row['horario']));
@@ -513,11 +535,11 @@ class Connection {
 
     public function getAlumnosGrupo($idGrupo) {
         $this->conectar();
-        $result = pg_query('select alumnos.id, alumnos.nombres, alumnos.ap_paterno, alumnos.ap_materno, alumnos.correo, alumnos.no_control, alumnos.nip, alumnos.telefono, alumnos.domicilio, alumnos.ciudad, carreras.nombre, alumnos.nombres_tutor, alumnos.telefono_tutor, alumnos.domicilio_tutor,  alumnos.ciudad_tutor from alumnos, carreras, det_grupos where alumnos.id_carrera = carreras.id and det_grupos.id_alumno = alumnos.id  and det_grupos.id_grupo = ' . $idGrupo);
+        $result = pg_query('select alumnos.id, alumnos.nombres, alumnos.ap_paterno, alumnos.ap_materno, alumnos.correo, alumnos.no_control, alumnos.nip, alumnos.telefono, alumnos.domicilio, alumnos.ciudad, carreras.nombre, alumnos.nombres_tutor, alumnos.telefono_tutor, alumnos.domicilio_tutor,  alumnos.ciudad_tutor, alumnos.calificacion_final_1, alumnos.calificacion_final_2 from alumnos, carreras, det_grupos where alumnos.id_carrera = carreras.id and det_grupos.id_alumno = alumnos.id  and det_grupos.id_grupo = ' . $idGrupo);
         $res = array();
 
         while ($row = pg_fetch_array($result)) {
-            array_push($res, array('id' => $row['id'], 'nombres' => $row['nombres'], 'ap_paterno' => $row['ap_paterno'], 'ap_materno' => $row['ap_materno'], 'correo' => $row['correo'], 'no_control' => $row['no_control'], 'nip' => $row['nip'], 'telefono' => $row['telefono'], 'domicilio' => $row['domicilio'], 'ciudad' => $row['ciudad'], 'nombre' => $row['nombre'], 'nombres_tutor' => $row['nombres_tutor'], 'telefono_tutor' => $row['telefono_tutor'], 'domicilio_tutor' => $row['domicilio_tutor'], 'ciudad_tutor' => $row['ciudad_tutor']));
+            array_push($res, array('id' => $row['id'], 'nombres' => $row['nombres'], 'ap_paterno' => $row['ap_paterno'], 'ap_materno' => $row['ap_materno'], 'correo' => $row['correo'], 'no_control' => $row['no_control'], 'nip' => $row['nip'], 'telefono' => $row['telefono'], 'domicilio' => $row['domicilio'], 'ciudad' => $row['ciudad'], 'nombre' => $row['nombre'], 'nombres_tutor' => $row['nombres_tutor'], 'telefono_tutor' => $row['telefono_tutor'], 'domicilio_tutor' => $row['domicilio_tutor'], 'ciudad_tutor' => $row['ciudad_tutor'], 'calificacion_final_1' => $row['calificacion_final_1'], 'calificacion_final_2' => $row['calificacion_final_2']));
         }
         return $res;
     }
@@ -693,6 +715,30 @@ class Connection {
             $cnt = 0;
             foreach ($a as $s) {
                 $query = 'insert into det_reporte_coordinador_departamental values (' . $row[0];
+                $b = explode("^", $s);
+                foreach ($b as $d) {
+                    $query = $query . ', \'' . $d . '\'';
+                }
+
+                $query = $query . ')';
+                $result = pg_query($query);
+                $cnt++;
+            }
+        }
+        pg_query('commit') or die('Ocurrió un error durante la transacción');
+        return $result;
+    }
+    
+    public function guardarReporteCoordinadorInstitucional($fecha, $idCrdInst, $nombreCrdInst, $matricula, $tabla) {
+        $this->conectar();
+        pg_query('begin') or die("No se pudo comenzar la transacción");
+        $result = pg_query('insert into reporte_coordinador_institucional values (default,\'' . $fecha . '\',\'' . $nombreCrdInst . '\',\'' . $matricula . '\',' . $idCrdInst . ') returning id');
+        $row = pg_fetch_array($result);
+        if ($row) {
+            $a = explode("|", $tabla);
+            $cnt = 0;
+            foreach ($a as $s) {
+                $query = 'insert into det_reporte_coordinador_institucional values (' . $row[0];
                 $b = explode("^", $s);
                 foreach ($b as $d) {
                     $query = $query . ', \'' . $d . '\'';
@@ -884,7 +930,7 @@ class Connection {
 
     public function getGrupoPorId($idGrupo) {
         $this->conectar();
-        $res = pg_query('select id, nombre, lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario from grupos where id = ' . $idGrupo);
+        $res = pg_query('select id, nombre, lugar_tutoria, id_periodo, id_tutor1, id_tutor2, horario, id_carrera from grupos where id = ' . $idGrupo);
         $result = array();
         while ($row = pg_fetch_array($res)) {
             array_push($result, $row['id']);
@@ -894,6 +940,7 @@ class Connection {
             array_push($result, $row['id_tutor1']);
             array_push($result, $row['id_tutor2']);
             array_push($result, $row['horario']);
+            array_push($result, $row['id_carrera']);
         }
         return $result;
     }

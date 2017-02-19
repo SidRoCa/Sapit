@@ -17,8 +17,9 @@ if (filter_input(INPUT_POST, 'idGrupo') and filter_input(INPUT_POST, 'nombre') a
     $idTutor1 = $_POST['idTutor1'];
     $idTutor2 = $_POST['idTutor2'];
     $horario = $_POST['horario'];
+    $idCarrera = $_POST['idCarrera'];
     $conn->conectar();
-    $query = 'update grupos set nombre = \'' . $nombre . '\' , lugar_tutoria = \'' . $lugarTutoria . '\',id_periodo = ' . $idPeriodo . ', id_tutor1 = ' . $idTutor1 . ', id_tutor2 = ' . $idTutor2 . ',horario = \'' . $horario . '\'  where id = ' . $idGrupo;
+    $query = 'update grupos set nombre = \'' . $nombre . '\' , lugar_tutoria = \'' . $lugarTutoria . '\',id_periodo = ' . $idPeriodo . ', id_tutor1 = ' . $idTutor1 . ', id_tutor2 = ' . $idTutor2 . ',horario = \'' . $horario . '\',id_carrera = '.$idCarrera.'  where id = ' . $idGrupo;
     $res = pg_query($query);
     if ($res) {
         echo "ok";

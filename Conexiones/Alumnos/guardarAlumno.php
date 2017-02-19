@@ -22,7 +22,7 @@ if (filter_input(INPUT_POST, 'nombre') and filter_input(INPUT_POST, 'apPaterno')
     $idGrupo = $_POST['idGrupo'];
     $conn->conectar();
     pg_query('begin') or die("No se pudo comenzar la transacción");
-    $queryAlumno = 'insert into alumnos values(default, \'' . $nombre . '\', \'' . $apPaterno . '\', \'' . $apMaterno . '\', \'' . $correo . '\', ' . $noControl . ', \'' . $nip . '\', \'' . $telefono . '\', \'' . $ciudad . '\', \'' . $domicilio . '\', ' . $idCarrera . ', ' . $idGrupo . ', \'' . $nombreTutor . '\', \'' . $domicilioTutor . '\', \'' . $telefonoTutor . '\', \'' . $ciudadTutor . '\') returning id';
+    $queryAlumno = 'insert into alumnos values(default, \'' . $nombre . '\', \'' . $apPaterno . '\', \'' . $apMaterno . '\', \'' . $correo . '\', ' . $noControl . ', \'' . $nip . '\', \'' . $telefono . '\', \'' . $ciudad . '\', \'' . $domicilio . '\', ' . $idCarrera . ', ' . $idGrupo . ', \'' . $nombreTutor . '\', \'' . $domicilioTutor . '\', \'' . $telefonoTutor . '\', \'' . $ciudadTutor . '\',null,null) returning id';
     $res= pg_query($queryAlumno);
     if ($res) {
         $idAlumno = pg_fetch_array($res)[0];

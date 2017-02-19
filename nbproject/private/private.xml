@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/Sapit/getAgregarTutor.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/Alumnos/eliminarAlumno.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/Alumnos/editarAlumno.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/getActaResultadosObtenidos.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/getAgregarAlumno.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/Conexiones/Alumnos/guardarAlumno.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/administrador.php</file>
+            <file>file:/C:/xampp/htdocs/Sapit/conexion.php</file>
         </group>
     </open-files>
 </project-private>

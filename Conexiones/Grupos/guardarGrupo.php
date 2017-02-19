@@ -17,8 +17,9 @@
         $idTutor1 = $_POST['idTutor1'];
         $idTutor2 = $_POST['idTutor2'];
         $horario = $_POST['horario'];
+        $idCarrera = $_POST['idCarrera'];
         $conn->conectar();
-        $query = 'insert into grupos values (default,\''.$nombre.'\',\''.$lugarTutoria.'\','.$idPeriodo.','.$idTutor1.','.$idTutor2.',\''.$horario.'\')';
+        $query = 'insert into grupos values (default,\''.$nombre.'\',\''.$lugarTutoria.'\','.$idPeriodo.','.$idTutor1.','.$idTutor2.',\''.$horario.'\','.$idCarrera.')';
         $res = pg_query($query);
         if($res){
         	echo "ok";

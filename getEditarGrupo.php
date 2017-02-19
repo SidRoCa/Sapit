@@ -12,6 +12,7 @@
     $conn = new Connection();
     $idGrupo = $_POST['idGrupo'];
     $grupo = $conn->getGrupoporId($idGrupo);
+    $carreras = $conn->getListaCarreras();
     $periodos = $conn->getListaPeriodos();
     $tutores = $conn->getListaTutores();
     ?>
@@ -45,6 +46,24 @@
             }
             ?>
         </select> </br>
+
+        <label>
+            Carrera : *
+        </label>
+        <select id="selectCarreras">
+            <option value="0">Selecciona una carrera</option>
+            <?php
+            foreach ($carreras as $carrera) {
+                if ($carrera['id'] == $grupo[7]) {
+                    echo '<option value="' . $carrera['id'] . '" selected>';
+                } else {
+                    echo '<option value="' . $carrera['id'] . '">';
+                }
+                echo $carrera['nombre'];
+                echo '</option>';
+            }
+            ?>
+        </select></br>
 
         <label for = "selectTutor1">
             Primer tutor : 
@@ -99,7 +118,6 @@
             Cancelar
         </button>
         <p id = "txtEstado">
-
         </p>
     </form>
     <script>
@@ -116,6 +134,7 @@
         function guardar() {
             var nombre = $("#txtNombre");
             var lugarTutoria = $("#txtLugarTutoria");
+            var carreraSeleccionada = $("#selectCarreras option:selected");
             var periodoSeleccionado = $("#selectPeriodo option:selected");
             var tutor1Seleccionado = $("#selectTutor1 option:selected");
             var tutor2Seleccionado = $("#selectTutor2 option:selected");
@@ -124,41 +143,46 @@
                 window.alert("Todos los campos con * son obligatorios");
             } else {
                 var idPeriodo = parseInt(periodoSeleccionado.val());
+                var idCarrera = parseInt(carreraSeleccionada.val());
                 var idTutor1 = parseInt(tutor1Seleccionado.val());
                 var idTutor2 = parseInt(tutor2Seleccionado.val());
 
                 if (idPeriodo > 0) {
+                    if (idCarrera > 0) {
 
-                    var txtEstado = $("#txtEstado");
-                    var btnGuardar = $("#btnGuardar");
-                    var btnCancelar = $("#btnCancelar");
-                    txtEstado.html("Cargando...");
-                    txtEstado.show();
-                    btnCancelar.hide();
-                    btnGuardar.hide();
-                    $.ajax({
-                        method: "POST",
-                        url: "Conexiones/Grupos/editarGrupo.php",
-                        data: {idGrupo: <?php echo($idGrupo)?> , nombre: nombre.val(), lugarTutoria: lugarTutoria.val(), idPeriodo: idPeriodo, idTutor1: idTutor1,
-                            idTutor2: idTutor2, horario: horario.val()}
-                    }).done(function (msg) {
-                        if (msg.localeCompare("ok") == 0) {
-                            irALista();
-                        } else {
-                            window.alert(msg);
-                            txtEstado.html("Ocurrió un error, inténtalo de nuevo");
-                            btnCancelar.show();
+                        var txtEstado = $("#txtEstado");
+                        var btnGuardar = $("#btnGuardar");
+                        var btnCancelar = $("#btnCancelar");
+                        txtEstado.html("Cargando...");
+                        txtEstado.show();
+                        btnCancelar.hide();
+                        btnGuardar.hide();
+                        $.ajax({
+                            method: "POST",
+                            url: "Conexiones/Grupos/editarGrupo.php",
+                            data: {idGrupo: <?php echo($idGrupo) ?>, nombre: nombre.val(), lugarTutoria: lugarTutoria.val(), idPeriodo: idPeriodo, idTutor1: idTutor1,
+                                idTutor2: idTutor2, horario: horario.val(), idCarrera: idCarrera}
+                        }).done(function (msg) {
+                            if (msg.localeCompare("ok") == 0) {
+                                irALista();
+                            } else {
+                                window.alert(msg);
+                                txtEstado.html("Ocurrió un error, inténtalo de nuevo");
+                                btnCancelar.show();
+                                btnGuardar.show();
+                            }
+                        }).fail(function (jqXHR, textStatus) {
+                            if (textStatus === 'timeout') {
+                                txtEstado.html("El servidor no responde, inténtalo de nuevo más tarde");
+                            } else {
+                                txtEstado.html("Ocurrió un error al guardar el departamento");
+                            }
                             btnGuardar.show();
-                        }
-                    }).fail(function (jqXHR, textStatus) {
-                        if (textStatus === 'timeout') {
-                            txtEstado.html("El servidor no responde, inténtalo de nuevo más tarde");
-                        } else {
-                            txtEstado.html("Ocurrió un error al guardar el departamento");
-                        }
-                        btnGuardar.show();
-                        btnCancelar.show();
-                    });
+                            btnCancelar.show();
+                        });
+                    } else {
+                        window.alert("Debes seleccionar una carrera");
+                    }
                 } else {
                     window.alert("Debes seleccionar un periodo");
                 }
