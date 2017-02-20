@@ -41,6 +41,57 @@ class Connection {
             array_push($res, array("idDiagnostico"=>$row['diagnostico_id'], "grupo"=>$row['diagnostico_grupo'], "fecha"=>
                 $row['diagnostico_fecha'], "semestre"=>$row['diagnostico_semestre'], "tutor"=>$row['tutor_nombre']));
         }
+        $query2 = 'select diagnostico_grupo.id as diagnostico_id, grupos.nombre as diagnostico_grupo, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') 
+        as diagnostico_fecha, diagnostico_grupo.semestre as diagnostico_semestre, tutores.nombres ||\' \'||tutores.ap_paterno ||\' \'|| tutores.ap_materno 
+        as tutor_nombre from diagnostico_grupo INNER JOIN grupos ON (diagnostico_grupo.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor2 = tutores.id) 
+        where tutores.id_departamento = '.$idDepartamento.' order by diagnostico_grupo.fecha desc';
+        $result2 = pg_query($query2);
+        while($row2 = pg_fetch_array($result2)){
+            $agregar = true;
+            foreach ($res as $elemento) {
+                if($row2['diagnostico_id'] == $elemento['idDiagnostico']){
+                    $agregar = false;
+                    break 1;
+                }   
+            }
+            if($agregar == true){
+                array_push($res, array("idDiagnostico"=>$row2['diagnostico_id'], "grupo"=>$row2['diagnostico_grupo'], "fecha"=>
+                    $row2['diagnostico_fecha'], "semestre"=>$row2['diagnostico_semestre'], "tutor"=>$row2['tutor_nombre']));
+            }
+        }
+        return $res;
+    }
+
+    public function getListaPlanesAccionTutorialPorDepartamento($idDepartamento){
+        $this->conectar();
+        $query = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre 
+        from plan_accion_tutorial INNER JOIN grupos ON (plan_accion_tutorial.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor1 = 
+        tutores.id) where tutores.id_departamento = '.$idDepartamento.' order by plan_accion_tutorial.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idPlan"=>$row['plan_id'], "fecha"=>$row['plan_fecha'], "grupo"=>$row['grupo_nombre'],
+                "tutor"=>$row['tutor_nombre']));
+        }
+        $query2 = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre 
+        from plan_accion_tutorial INNER JOIN grupos ON (plan_accion_tutorial.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor2 = 
+        tutores.id) where tutores.id_departamento = '.$idDepartamento.' order by plan_accion_tutorial.fecha desc';
+        $result2 = pg_query($query2);
+        while($row2 = pg_fetch_array($result2)){
+            $agregar = true;
+            foreach ($res as $elemento) {
+                if($row2['plan_id']==$elemento['idPlan']){
+                    $agregar = false;
+                    break 1;
+                }
+            }
+            if($agregar == true){
+                array_push($res, array("idPlan"=>$row2['plan_id'], "fecha"=>$row2['plan_fecha'], "grupo"=>$row2['grupo_nombre'],
+                    "tutor"=>$row2['tutor_nombre']));
+            }
+        }
         return $res;
     }
 
