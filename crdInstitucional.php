@@ -36,7 +36,14 @@ $conn = new Connection();
                     <ul>
                         <li><a href="javascript:void(0);" onclick="clicReporteDatosTutores()">Reporte de datos de los docentes tutores</a></li>
                         <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Reporte semestral</a></li>
+                        <li>
+                            Diagnosticos departamentales
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticoDepartamental()">Editar</a></li>
+                        </ul>
+                        </li>
                     </ul>
+                    
                 </ul>
             </div>
             <div id="principal">
@@ -152,4 +159,19 @@ $conn = new Connection();
         });
     }
 
+    function clicEditarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosDepartamentalesEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
 </script>

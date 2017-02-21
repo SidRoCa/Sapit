@@ -110,6 +110,21 @@ class Connection {
         return $res;
     }
 
+    public function getListaDiagnosticosDepartamentales(){
+        $this->conectar();
+        $query = 'select diagnostico_departamental.id as diagnostico_id, diagnostico_departamental.coord_departamental as 
+        diagnostico_coordinador, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as diagnostico_fecha, departamentos.nombre 
+        as diagnostico_departamento from diagnostico_departamental INNER JOIN departamentos ON (diagnostico_departamental.id_departamento = 
+        departamentos.id)';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idDiagnostico"=>$row['diagnostico_id'], "coordinador"=> $row['diagnostico_coordinador'],
+                "fecha"=>$row['diagnostico_fecha'], "departamento"=> $row['diagnostico_departamento']));
+        }
+        return $res;
+    }
+
     public function getListaDiagnosticosDepartamentalesPorCoordinador($nombreCoordinador){
         $this->conectar();
         $query = 'select diagnostico_departamental.id as diagnostico_id, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as diagnostico_fecha from diagnostico_departamental where trim(coord_departamental) = trim(\''.$nombreCoordinador.'\')';
@@ -200,10 +215,10 @@ class Connection {
     public function getDiagnosticoDepartamentalPorId($idDiagnostico){
         $this->conectar();
         //getDptoUsuario
-        $query = 'select to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as fecha from diagnostico_departamental where id = '.$idDiagnostico;
+        $query = 'select diagnostico_departamental.id as id, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as fecha, departamentos.nombre as departamento, diagnostico_departamental.coord_departamental as coordinador from diagnostico_departamental INNER JOIN departamentos ON (diagnostico_departamental.id_departamento = departamentos.id) where diagnostico_departamental.id = '.$idDiagnostico;
         $result = pg_query($query);
         $row = pg_fetch_array($result);
-        $res = array("fecha" =>$row['fecha']);
+        $res = array("fecha" =>$row['fecha'], "id"=> $row['id'], "departamento"=> $row['departamento'], "coordinador"=>$row['coordinador']);
         $query2 = 'select * from det_diagnostico_departamental where id_diagnostico_departamental = '.$idDiagnostico;
         $result2 = pg_query($query2);
         $det = array();
