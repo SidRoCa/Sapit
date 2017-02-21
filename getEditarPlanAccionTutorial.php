@@ -300,7 +300,7 @@
                     if(msg.localeCompare('ok') == 0){
                         irALista();
                     }else{
-                        window.alert('Ocurrió un error, inténtalode nuevo');
+                        window.alert('Ocurrió un error, inténtalo de nuevo');
                     }
                 }).fail(function (jqXHR, textStatus) {
                     if (textStatus === 'timeout') {

@@ -69,6 +69,12 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanesAccionTutorial()">Editar</a></li>
                         </ul>
                         </li>
+                        <li>
+                            Reportes de tutores
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarReportesTutor()">Editar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                 </ul>
             </div>
@@ -237,6 +243,22 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaPlanesAccionTutorialEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEditarReportesTutor(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesTutorEditar.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);

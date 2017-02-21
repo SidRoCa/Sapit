@@ -62,6 +62,21 @@ class Connection {
         return $res;
     }
 
+    public function getListaReportesTutoresPorDepartamento($idDepartamento){
+        $this->conectar();
+        $query = 'select reporte_tutor.id as reporte_id, to_char(reporte_tutor.fecha, \'DD/MM/YYYY\') as reporte_fecha, 
+        grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as 
+        tutor_nombre from reporte_tutor INNER JOIN grupos ON (reporte_tutor.id_grupo = grupos.id) INNER JOIN tutores ON 
+        (reporte_tutor.id_tutor = tutores.id) where tutores.id_departamento = '.$idDepartamento;
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idReporte"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha'], "grupo"=>$row['grupo_nombre'],
+                "tutor"=>$row['tutor_nombre']));
+        }
+        return $res;
+    }
+
     public function getListaPlanesAccionTutorialPorDepartamento($idDepartamento){
         $this->conectar();
         $query = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, 
@@ -264,13 +279,13 @@ class Connection {
         $rowReporte = pg_fetch_array($resultReporte);
         $queryDet = 'select det_reporte_tutor.tutoria_grupal as rep_tutoriagrupal, det_reporte_tutor.tutoria_individual 
         as rep_tutoriaindividual, det_reporte_tutor.canalizado as rep_canalizado, det_reporte_tutor.area_canalizada as 
-        rep_areacanalizada, alumnos.nombres as alumno_nombres, alumnos.ap_paterno as alumno_appaterno, alumnos.ap_materno as 
+        rep_areacanalizada, alumnos.id as alumno_id, alumnos.nombres as alumno_nombres, alumnos.ap_paterno as alumno_appaterno, alumnos.ap_materno as 
         alumnos_apmaterno from det_reporte_tutor INNER JOIN alumnos ON (det_reporte_tutor.id_alumno = alumnos.id) where 
         det_reporte_tutor.id_reporte_tutor = '.$idReporte;
         $resultDet = pg_query($queryDet);
         $detRep = array();
         while($rowDet = pg_fetch_array($resultDet)){
-            array_push($detRep, array("alumno"=>$rowDet['alumno_nombres'].' '.$rowDet['alumno_appaterno'].' '.$rowDet['alumnos_apmaterno'],
+            array_push($detRep, array("idAlumno"=>$rowDet['alumno_id'], "alumno"=>$rowDet['alumno_nombres'].' '.$rowDet['alumno_appaterno'].' '.$rowDet['alumnos_apmaterno'],
                 "tutoriaGrupal"=>$rowDet['rep_tutoriagrupal'], "tutoriaIndividual"=>$rowDet['rep_tutoriaindividual'],"canalizado"=>$rowDet['rep_canalizado'],
                 "areaCanalizada"=>$rowDet['rep_areacanalizada']));
         }
