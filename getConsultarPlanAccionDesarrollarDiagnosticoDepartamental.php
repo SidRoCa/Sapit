@@ -43,14 +43,14 @@
                 echo '<tr>';
                 echo '<td>'.$problema['problema'].'</td>';
                 $det = $problema[0];
-                foreach ($det as $row) {
-                    foreach ($grupos as $grupo) {
+                foreach ($grupos as $grupo) {
+                    $rowAux = '<td></td>';
+                    foreach ($det as $row) {
                         if($grupo['id'] == $row['idGrupo']){
-                            echo '<td>'.$row['valor'].'</td>';
-                        }else{
-                            echo '<td></td>';
+                            $rowAux = '<td>'.$row['valor'].'</td>';
                         }
                     }
+                    echo $rowAux;
                 }
                 echo '</tr>';
             }

@@ -13,7 +13,7 @@
     $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
     $reportes = $conn->getListaReportesTutoresPorDepartamento($idDepartamento);
     ?>
-    <h2>Lista de planes de acción tutorial por departamento</h2>
+    <h2>Lista de reportes de los tutores</h2>
     <table id="tablaDatos">
         <tr>
             <th>

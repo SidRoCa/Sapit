@@ -79,18 +79,21 @@ class Connection {
 
     public function getListaPlanesAccionTutorialPorDepartamento($idDepartamento){
         $this->conectar();
-        $query = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        $query = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, grupos.id as grupo_id,
         grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre 
         from plan_accion_tutorial INNER JOIN grupos ON (plan_accion_tutorial.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor1 = 
         tutores.id) where tutores.id_departamento = '.$idDepartamento.' order by plan_accion_tutorial.fecha desc';
         $result = pg_query($query);
         $res = array();
         while($row = pg_fetch_array($result)){
+            $queryTutor2 = 'select tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre from tutores INNER JOIN grupos ON (tutores.id = grupos.id_tutor2) where grupos.id = '.$row['grupo_id'];
+            $resultTutor2 = pg_query($queryTutor2);
+            $rowTut = pg_fetch_array($resultTutor2);
             array_push($res, array("idPlan"=>$row['plan_id'], "fecha"=>$row['plan_fecha'], "grupo"=>$row['grupo_nombre'],
-                "tutor"=>$row['tutor_nombre']));
+                "tutor"=>$row['tutor_nombre'], "tutor2"=>$rowTut['tutor_nombre']));
         }
         $query2 = 'select plan_accion_tutorial.id as plan_id, to_char(plan_accion_tutorial.fecha, \'DD/MM/YYYY\') as plan_fecha, 
-        grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre 
+        grupos.id as grupo_id, grupos.nombre as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre 
         from plan_accion_tutorial INNER JOIN grupos ON (plan_accion_tutorial.id_grupo = grupos.id) INNER JOIN tutores ON (grupos.id_tutor2 = 
         tutores.id) where tutores.id_departamento = '.$idDepartamento.' order by plan_accion_tutorial.fecha desc';
         $result2 = pg_query($query2);
@@ -103,8 +106,11 @@ class Connection {
                 }
             }
             if($agregar == true){
+                $queryTutor1 = 'select tutores.nombres ||\' \'|| tutores.ap_paterno ||\' \'|| tutores.ap_materno as tutor_nombre from tutores INNER JOIN grupos ON (tutores.id = grupos.id_tutor1) where grupos.id = '.$row2['grupo_id'];
+                $resultTutor1 = pg_query($queryTutor1);
+                $rowTut = pg_fetch_array($resultTutor1);
                 array_push($res, array("idPlan"=>$row2['plan_id'], "fecha"=>$row2['plan_fecha'], "grupo"=>$row2['grupo_nombre'],
-                    "tutor"=>$row2['tutor_nombre']));
+                    "tutor"=>$row2['tutor_nombre'], "tutor2"=>$rowTut['tutor_nombre']));
             }
         }
         return $res;
@@ -192,6 +198,19 @@ class Connection {
         while($row = pg_fetch_array($result)){
             array_push($res, array("idPlan"=>$row['plan_id'], "coordinador"=>$row['plan_coordinador'], "fecha"=>$row['plan_fecha'],
                 "departamento"=>$row['plan_departamento']));
+        }
+        return $res;
+    }
+
+    public function getListaPlanesDesarrollarDiagnosticoDepartamental(){
+        $this->conectar();
+        $query = 'select planeacion_diagnostico_departamental.id as planeacion_id, to_char(planeacion_diagnostico_departamental.fecha, \'DD/MM/YYYY\') as 
+        planeacion_fecha, departamentos.nombre as planeacion_departamento from planeacion_diagnostico_departamental INNER JOIN departamentos 
+        ON (planeacion_diagnostico_departamental.id_departamento = departamentos.id) order by planeacion_diagnostico_departamental.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idPlan"=>$row['planeacion_id'], "fecha"=>$row['planeacion_fecha'], "departamento"=>$row['planeacion_departamento']));
         }
         return $res;
     }
@@ -329,12 +348,12 @@ class Connection {
 
     public function getPlanDesarrollarDiagnosticoDepartamentalPorId($idPlan){
         $this->conectar();
-        $queryPlan = 'select to_char(planeacion_diagnostico_departamental.fecha, \'DD/MM/YYYY\') as plan_fecha, 
+        $queryPlan = 'select planeacion_diagnostico_departamental.id as plan_id, to_char(planeacion_diagnostico_departamental.fecha, \'DD/MM/YYYY\') as plan_fecha, 
         departamentos.nombre as plan_departamento, departamentos.id as departamento_id from planeacion_diagnostico_departamental INNER JOIN departamentos 
         ON (planeacion_diagnostico_departamental.id_departamento = departamentos.id) where planeacion_diagnostico_departamental.id = '.$idPlan;
         $resultPlan = pg_query($queryPlan);
         $rowPlan = pg_fetch_array($resultPlan);
-        $res = array("idDepartamento" => $rowPlan['departamento_id'],"fecha" => $rowPlan['plan_fecha'], "departamento" => $rowPlan['plan_departamento']);
+        $res = array("id"=> $rowPlan['plan_id'], "idDepartamento" => $rowPlan['departamento_id'],"fecha" => $rowPlan['plan_fecha'], "departamento" => $rowPlan['plan_departamento']);
         $queryProblematicas = 'select id, problema from det_planeacion_diagnostico_departamental where id_planeacion_diagnostico_departamental = '.$idPlan;
         $resultProblematicas = pg_query($queryProblematicas);
         $problematicas = array();

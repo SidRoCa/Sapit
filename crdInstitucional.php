@@ -48,6 +48,12 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanAccionTutorialDepartamental()">Editar</a></li>
                         </ul>
                         </li>
+                        <li>
+                            Planes para desarrollar diagnósticos departamentales
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarPlanDesarrollarDiagnosticoDepartamental()">Editar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     
                 </ul>
@@ -185,6 +191,22 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaPlanesAccionTutorialDepartamentalEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEditarPlanDesarrollarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesDesarrollarDiagnosticoDepartamentalEditar.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);
