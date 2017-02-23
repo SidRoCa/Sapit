@@ -215,6 +215,20 @@ class Connection {
         return $res;
     }
 
+    public function getListaReportesSemestralesCoordinador(){
+        $this->conectar();
+        $query = 'select reporte_coordinador_departamental.id as reporte_id, to_char(reporte_coordinador_departamental.fecha, \'DD/MM/YYYY\') 
+        as reporte_fecha, reporte_coordinador_departamental.departamento_academico as reporte_departamento, usuarios.nombre as usuario_nombre 
+        from reporte_coordinador_departamental INNER JOIN usuarios ON (reporte_coordinador_departamental.id_coordinador_departamental = usuarios.id) 
+         order by reporte_coordinador_departamental.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha'], "departamento"=>$row['reporte_departamento'], "coordinador"=>$row['usuario_nombre']));
+        }
+        return $res;
+    }
+
     public function getDiagnosticoGrupalPorId($idDiagnostico){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, grupos.id_tutor1 as grupos_idtutor1, grupos.id_tutor2 as grupos_idtutor2, diagnostico_grupo.id as diagnosticos_id, to_char(diagnostico_grupo.fecha, \'DD/MM/YYYY\') as diagnosticos_fecha, diagnostico_grupo.semestre as diagnosticos_semestre from grupos INNER JOIN diagnostico_grupo ON (grupos.id = diagnostico_grupo.id_grupo) where diagnostico_grupo.id = '.$idDiagnostico;
@@ -244,6 +258,34 @@ class Connection {
                 "hallazgos"=> $rowDet['diagnosticos_hallazgos']));
         }
         array_push($res, $detDiagnosticos);
+        return $res;
+    }
+
+    public function getReporteSemestralCoordinadorPorId($idReporte){
+        $this->conectar();
+        $query = 'select reporte_coordinador_departamental.id as reporte_id, to_char(reporte_coordinador_departamental.fecha, \'DD/MM/YYYY\') 
+        as reporte_fecha, reporte_coordinador_departamental.programa_educativo as reporte_programa_educativo, reporte_coordinador_departamental.departamento_academico 
+        as reporte_departamento_academico, reporte_coordinador_departamental.observaciones as reporte_observaciones, usuarios.nombre as 
+        reporte_coordinador from reporte_coordinador_departamental INNER JOIN usuarios ON (reporte_coordinador_departamental.id_coordinador_departamental= 
+            usuarios.id) where reporte_coordinador_departamental.id = '.$idReporte;
+        $result = pg_query($query);
+        $row = pg_fetch_array($result);
+        $res = array("id"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha'], "programaEducativo"=>$row['reporte_programa_educativo'],
+            "departamentoAcademico"=>$row['reporte_departamento_academico'], "observaciones"=>$row['reporte_observaciones'],
+            "coordinador"=>$row['reporte_coordinador']);
+        $queryDet = 'select det_reporte_coordinador_departamental.nombre_grupo as det_grupo, det_reporte_coordinador_departamental.cantidad_tutorias_grupales as 
+        det_tutorias_grupales, det_reporte_coordinador_departamental.cantidad_tutorias_individuales as det_tutorias_individuales, det_reporte_coordinador_departamental.estudiantes_canalizados 
+        as det_estudiantes_canalizados, det_reporte_coordinador_departamental.area_canalizada as det_area_canalizada, tutores.nombres || \' \'|| tutores.ap_paterno ||\' \'||tutores.ap_materno 
+        as tutor_nombre, tutores.id as tutor_id from det_reporte_coordinador_departamental INNER JOIN tutores ON (det_reporte_coordinador_departamental.id_tutor = tutores.id) where 
+        det_reporte_coordinador_departamental.id_reporte_coordinador_departamental = '.$idReporte;
+        $resultDet = pg_query($queryDet);
+        $det = array();
+        while($rowDet = pg_fetch_array($resultDet)){
+            array_push($det, array("idTutor"=>$rowDet['tutor_id'], "tutor"=>$rowDet['tutor_nombre'], "grupo"=>$rowDet['det_grupo'],
+                "tutoriasGrupales"=>$rowDet['det_tutorias_grupales'], "tutoriasIndividuales"=>$rowDet['det_tutorias_individuales'],
+                "estudiantesCanalizados"=>$rowDet['det_estudiantes_canalizados'], "areaCanalizada"=>$rowDet['det_area_canalizada']));
+        }
+        array_push($res, $det);
         return $res;
     }
 
