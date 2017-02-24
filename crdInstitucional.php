@@ -35,7 +35,14 @@ $conn = new Connection();
                     <strong>Documentos y reportes</strong>
                     <ul>
                         <li><a href="javascript:void(0);" onclick="clicReporteDatosTutores()">Reporte de datos de los docentes tutores</a></li>
-                        <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Reporte semestral</a></li>
+                        <li>
+                            Reportes semestral del coordinador institucional
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Agregar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEditarReporteSemestralCoordinadorInstitucional()">Editar</a></li>
+                        </ul>
+                        </li>
+                        
                         <li>
                             Diagnosticos departamentales
                         <ul>
@@ -229,6 +236,22 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaReportesSemestralCoordinadorEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });      
+    }
+
+    function clicEditarReporteSemestralCoordinadorInstitucional(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestralesCoordinadorInstitucionalEditar.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);

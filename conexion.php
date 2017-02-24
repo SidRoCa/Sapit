@@ -261,6 +261,44 @@ class Connection {
         return $res;
     }
 
+    public function getListaReportesSemestralesCoordinadorInstitucional(){
+        $this->conectar();
+        $query = 'select reporte_coordinador_institucional.id as reporte_id, reporte_coordinador_institucional.nombre_coordinador_institucional 
+        as reporte_coordinador, to_char(reporte_coordinador_institucional.fecha, \'DD/MM/YYYY\') as reporte_fecha from reporte_coordinador_institucional 
+        order by fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("id"=>$row['reporte_id'], "coordinador"=>$row['reporte_coordinador'], "fecha"=>$row['reporte_fecha']));
+        }
+        return $res;
+    }
+
+    public function getReporteSemestralCoordinadorInstitucionalPorId($idReporte){
+        $this->conectar();
+        $query = 'select reporte_coordinador_institucional. id as reporte_id, to_char(reporte_coordinador_institucional.fecha, \'DD/MM/YYYY\') as reporte_fecha, 
+        reporte_coordinador_institucional.nombre_coordinador_institucional as reporte_coordinador, reporte_coordinador_institucional.matricula_instituto_tecnologico as 
+        reporte_matricula_tecnologico from reporte_coordinador_institucional where id = '.$idReporte;
+        $result = pg_query($query);
+        $row = pg_fetch_array($result);
+        $res = array("id"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha'], "coordinador"=>$row['reporte_coordinador'], 
+            "matricula"=>$row['reporte_matricula_tecnologico']);
+        $queryDet = 'select det_reporte_coordinador_institucional.programa_educativo as det_programa_educativo, det_reporte_coordinador_institucional.cantidad_tutores as 
+        det_cantidad_tutores, det_reporte_coordinador_institucional.tutoria_grupal as det_tutoria_grupal, det_reporte_coordinador_institucional.tutoria_individual as 
+        det_tutoria_individual, det_reporte_coordinador_institucional.estudiantes_canalizados as det_estudiantes_canalizados, det_reporte_coordinador_institucional.area_canalizada 
+        as det_area_canalizada, det_reporte_coordinador_institucional.Matricula as det_matricula from det_reporte_coordinador_institucional where id_reporte_coordinador_institucional = '.$idReporte;
+        $resultDet = pg_query($queryDet);
+        $det = array();
+        while($rowDet = pg_fetch_array($resultDet)){
+            array_push($det, array("programaEducativo"=>$rowDet['det_programa_educativo'], "cantidadTutores"=> $rowDet['det_cantidad_tutores'],
+                "tutoriaGrupal"=>$rowDet['det_tutoria_grupal'], "tutoriaIndividual"=>$rowDet['det_tutoria_individual'], "estudiantesCanalizados"=>$rowDet['det_estudiantes_canalizados'], 
+                "areaCanalizada"=>$rowDet['det_area_canalizada'], "matricula"=>$rowDet['det_matricula']));
+        }
+        array_push($res, $det);
+        return $res;
+
+    }
+
     public function getReporteSemestralCoordinadorPorId($idReporte){
         $this->conectar();
         $query = 'select reporte_coordinador_departamental.id as reporte_id, to_char(reporte_coordinador_departamental.fecha, \'DD/MM/YYYY\') 
