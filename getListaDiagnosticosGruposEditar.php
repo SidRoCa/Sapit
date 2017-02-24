@@ -28,6 +28,9 @@
             <th>
                 Tutor 1
             </th>
+            <th>
+                Tutor 2
+            </th>
         </tr>
         <?php
         foreach ($diagnosticos as $diagnostico) {
@@ -36,6 +39,7 @@
             echo('<td>' . $diagnostico['fecha'] . '</td>');
             echo('<td>' . $diagnostico['semestre'] . '</td>');
             echo('<td>' . $diagnostico['tutor'] . '</td>');
+            echo('<td>' . $diagnostico['tutor2'] . '</td>');
             echo('</tr>');
         }
         ?>

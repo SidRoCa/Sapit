@@ -67,6 +67,12 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicEditarReporteSemestralCoordinador()">Editar</a></li>
                         </ul>
                         </li>
+                        <li>
+                            Diagnósticos de grupos
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarDiagnosticoGrupo()">Eliminar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     
                 </ul>
@@ -262,5 +268,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });      
+    }
+
+    function clicEliminarDiagnosticoGrupo(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGruposEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
     }
 </script>
