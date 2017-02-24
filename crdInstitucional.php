@@ -61,6 +61,7 @@ $conn = new Connection();
                             Planes para desarrollar diagnósticos departamentales
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanDesarrollarDiagnosticoDepartamental()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarPlanDesarrollarDiagnosticoDepartamental()">Eliminar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -362,5 +363,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });   
+    }
+
+    function clicEliminarPlanDesarrollarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesDesarrollarDiagnosticoDepartamentalEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
     }
 </script>
