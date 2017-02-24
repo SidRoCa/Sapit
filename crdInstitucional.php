@@ -47,6 +47,7 @@ $conn = new Connection();
                             Diagnosticos departamentales
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticoDepartamental()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarDiagnosticoDepartamental()">Eliminar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -328,5 +329,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });   
+    }
+
+    function clicEliminarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosDepartamentalesEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
     }
 </script>

@@ -171,7 +171,7 @@ class Connection {
         $query = 'select diagnostico_departamental.id as diagnostico_id, diagnostico_departamental.coord_departamental as 
         diagnostico_coordinador, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as diagnostico_fecha, departamentos.nombre 
         as diagnostico_departamento from diagnostico_departamental INNER JOIN departamentos ON (diagnostico_departamental.id_departamento = 
-        departamentos.id)';
+        departamentos.id) order by diagnostico_departamental.fecha desc';
         $result = pg_query($query);
         $res = array();
         while($row = pg_fetch_array($result)){
