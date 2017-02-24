@@ -79,6 +79,12 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicEliminarPlanAccionTutorial()">Eliminar</a></li>
                         </ul>
                         </li>
+                        <li>
+                            Reportes semestrales de los tutores
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarReporteSemestralTutor()">Eliminar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     
                 </ul>
@@ -296,6 +302,22 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaPlanesAccionTutorialEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEliminarReporteSemestralTutor(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestralesTutorEliminar.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);

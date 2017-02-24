@@ -215,6 +215,21 @@ class Connection {
         return $res;
     }
 
+    public function getListaReportesSemestralesTutores(){
+        $this->conectar();
+        $query = 'select reporte_tutor.id as reporte_id, to_char(reporte_tutor.fecha, \'DD/MM/YYYY\') as reporte_fecha, grupos.nombre 
+        as grupo_nombre, tutores.nombres ||\' \'|| tutores.ap_paterno||\' \'|| tutores.ap_materno as tutor_nombre from reporte_tutor 
+        INNER JOIN grupos ON (reporte_tutor.id_grupo = grupos.id) INNER JOIN tutores ON (reporte_tutor.id_tutor = tutores.id) order 
+        by reporte_tutor.fecha desc';
+        $result = pg_query($query);
+        $res = array();
+        while($row = pg_fetch_array($result)){
+            array_push($res, array("idReporte"=>$row['reporte_id'], "fecha"=>$row['reporte_fecha'],"grupo"=>$row['grupo_nombre'],
+                "tutor"=>$row['tutor_nombre']));
+        }
+        return $res;
+    }
+
     public function getListaReportesSemestralesPorTutor($idTutor){
         $this->conectar();
         $query = 'select grupos.id as grupos_id, grupos.nombre as grupos_nombre, reporte_tutor.id as reporte_id, to_char(reporte_tutor.fecha, \'DD/MM/YYYY\') as reporte_fecha from grupos INNER JOIN reporte_tutor ON (grupos.id = reporte_tutor.id_grupo) where reporte_tutor.id_tutor = '.$idTutor;
