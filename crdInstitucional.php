@@ -73,6 +73,12 @@ $conn = new Connection();
                             <li><a href="javascript:void(0);" onclick="clicEliminarDiagnosticoGrupo()">Eliminar</a></li>
                         </ul>
                         </li>
+                        <li>
+                            Planes acción tutorial
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarPlanAccionTutorial()">Eliminar</a></li>
+                        </ul>
+                        </li>
                     </ul>
                     
                 </ul>
@@ -284,5 +290,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
+    }
+
+    function clicEliminarPlanAccionTutorial(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorialEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
     }
 </script>
