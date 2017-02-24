@@ -54,6 +54,7 @@ $conn = new Connection();
                             Planes acción tutorial departamental
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanAccionTutorialDepartamental()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarPlanAccionTutorialDepartamental()">Eliminar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -345,5 +346,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
+    }
+
+    function clicEliminarPlanAccionTutorialDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorialDepartamentalEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
     }
 </script>
