@@ -13,6 +13,8 @@
     }
     
     $idGrupo = intval($_POST['idGrupo']);
+    $idTutor = $_SESSION["id_usuario"];
+    $agregar = $conn->checkReporteSemestralTutorDuplicado($idTutor);
     ?>
     <table>
         <tr>
@@ -95,7 +97,7 @@
 
 <script>
 
-  
+    var agregar = <?php echo $agregar;?>;
 
     function cancelar() {
         $("#reporteSemestral").show();
@@ -105,7 +107,6 @@
 
     
     function guardar() {
-    
         if ($("#fecha").val() != "") {
             if ($("#selAlumno").val() != -1) {
 

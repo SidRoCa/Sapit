@@ -4,6 +4,7 @@
     $conn = new Connection();
     date_default_timezone_set('America/Denver');
     $idGrupo = intval($_POST['idGrupo']);
+    $agregar = $conn->checkDiagnosticoGrupoDuplicado($idGrupo);
     session_start();
     if ($_SESSION['tipo_usuario'] !== "tutor") {
         ?>
@@ -117,14 +118,13 @@
     </div>
 </div>
 <script>
-
+    var agregar = <?php echo $agregar?>;
     function clicAgregar() {
         if ($("#fase").val() !== "") {
             if ($("#area").val() !== "") {
                 if ($("#instrumento").val() !== "") {
                     if ($("#analisis").val() !== "") {
                         if ($("#hallazgos").val() !== "") {
-
                             $("#tablaDatos").html($("#tablaDatos").html() + '<tr><td>' + $("#fase").val() + '</td><td>' + $("#area").val() + '</td><td>' + $("#instrumento").val() + '</td><td>' + $("#analisis").val() + '</td><td>' + $("#hallazgos").val() + '</td></tr>');
                             $("#fase").val("");
                             $("#area").val("");
@@ -159,78 +159,82 @@
         $("#mainContenido").hide();
     }
     function guardar(idGrupo) {
-        if ($("#fecha").val() !== "") {
-            if ($("#semestre").val() !== "") {
-                if ($("#tablaDatos tr:last").attr("id") !== "headerTablaDatos") {
+        if(agregar==0){
+            if ($("#fecha").val() !== "") {
+                if ($("#semestre").val() !== "") {
+                    if ($("#tablaDatos tr:last").attr("id") !== "headerTablaDatos") {
 
-                    var arreglo = '';
-                    var aux = '';
-                    var intaux = 1;
-                    var intauxx = 1;
-                    $("#tablaDatos tr").each(function (fila) {
-                        if (fila !== 0) {
-                            if (intauxx == 1) {
-                                $(this).children("td").each(function (columna) {
-                                    if (intaux === 1) {
-                                        aux = aux + $(this).text();
-                                        intaux = intaux + 1;
-                                    } else {
-                                        aux = aux + '^' + $(this).text();
-                                        intaux = intaux + 1;
-                                    }
-                                });
-                                arreglo = arreglo + aux;
-                                aux = '';
-                                intauxx = intauxx + 1;
-                            } else {
-                                arreglo = arreglo + '|';
-                                $(this).children("td").each(function (columna) {
-                                    if (intaux === 1) {
-                                        aux = aux + $(this).text();
-                                        intaux = intaux + 1;
-                                    } else {
-                                        aux = aux + '^' + $(this).text();
-                                        intaux = intaux + 1;
-                                    }
-                                });
-                                arreglo = arreglo + aux;
-                                aux = '';
-                                intauxx = intauxx + 1;
+                        var arreglo = '';
+                        var aux = '';
+                        var intaux = 1;
+                        var intauxx = 1;
+                        $("#tablaDatos tr").each(function (fila) {
+                            if (fila !== 0) {
+                                if (intauxx == 1) {
+                                    $(this).children("td").each(function (columna) {
+                                        if (intaux === 1) {
+                                            aux = aux + $(this).text();
+                                            intaux = intaux + 1;
+                                        } else {
+                                            aux = aux + '^' + $(this).text();
+                                            intaux = intaux + 1;
+                                        }
+                                    });
+                                    arreglo = arreglo + aux;
+                                    aux = '';
+                                    intauxx = intauxx + 1;
+                                } else {
+                                    arreglo = arreglo + '|';
+                                    $(this).children("td").each(function (columna) {
+                                        if (intaux === 1) {
+                                            aux = aux + $(this).text();
+                                            intaux = intaux + 1;
+                                        } else {
+                                            aux = aux + '^' + $(this).text();
+                                            intaux = intaux + 1;
+                                        }
+                                    });
+                                    arreglo = arreglo + aux;
+                                    aux = '';
+                                    intauxx = intauxx + 1;
+                                }
+                                intaux = 1;
                             }
-                            intaux = 1;
-                        }
-                    });
+                        });
 
-                    $.ajax({
-                        method: "POST",
-                        url: "guardarDiagnosticoGrupo.php",
-                        data: {idGrupo: idGrupo, fecha: $("#fecha").val(), idCarrera: $("#selectCarrera").val(), idDpto: $("#selectDpto").val(), semestre: $("#semestre").val(), arreglo: arreglo}
-                    }).done(function (msg) {
-                        $("#fichaAlumnosTutorados").hide();
-                        $("#registroAsistenciaGrupal").hide();
-                        $("#registroAsistenciaIndividual").hide();
-                        $("#diagnosticoGrupo").hide();
-                        $("#planAccionTutorial").hide();
-                        $("#mainContenido").show();
-                        $("#mainContenido").html(msg);
+                        $.ajax({
+                            method: "POST",
+                            url: "guardarDiagnosticoGrupo.php",
+                            data: {idGrupo: idGrupo, fecha: $("#fecha").val(), idCarrera: $("#selectCarrera").val(), idDpto: $("#selectDpto").val(), semestre: $("#semestre").val(), arreglo: arreglo}
+                        }).done(function (msg) {
+                            $("#fichaAlumnosTutorados").hide();
+                            $("#registroAsistenciaGrupal").hide();
+                            $("#registroAsistenciaIndividual").hide();
+                            $("#diagnosticoGrupo").hide();
+                            $("#planAccionTutorial").hide();
+                            $("#mainContenido").show();
+                            $("#mainContenido").html(msg);
+                        }).fail(function (jqXHR, textStatus) {
+                            if (textStatus === 'timeout') {
+                                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+                            } else {
+                                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+                            }
+                        });
 
-                    }).fail(function (jqXHR, textStatus) {
-                        if (textStatus === 'timeout') {
-                            $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
-                        } else {
-                            $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
-                        }
-                    });
-
+                    } else {
+                        alert('No hay elementos de la tabla que agregar');
+                    }
                 } else {
-                    alert('No hay elementos de la tabla que agregar');
+                    alert('Debe asignar un semestre');
                 }
             } else {
-                alert('Debe asignar un semestre');
+                alert('Debe seleccionar una fecha');
             }
-        } else {
-            alert('Debe seleccionar una fecha');
+        }else{
+            window.alert('Ya se registró un diagnóstico de este grupo con anterioridad y sólo puede existir uno por grupo');
         }
+        
     }
 
 

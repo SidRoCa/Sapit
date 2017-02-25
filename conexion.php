@@ -923,7 +923,6 @@ class Connection {
     public function guardarDiagnosticoGrupo($idGrupo, $fecha, $semestre, $tabla) {
         $this->conectar();
         pg_query('begin') or die("No se pudo comenzar la transacción");
-
         $result = pg_query('insert into diagnostico_grupo values (default, ' . $idGrupo . ',\'' . $fecha . '\',\'' . $semestre . '\') returning id');
         $row = pg_fetch_array($result);
         if ($row) {
@@ -940,6 +939,30 @@ class Connection {
         }
         pg_query('commit') or die('Ocurrió un error durante la transacción');
         return $result;
+    }
+
+    public function checkDiagnosticoGrupoDuplicado($idGrupo){
+        $this->conectar();
+        $query = 'select * from diagnostico_grupo where id_grupo = '.$idGrupo;
+        $result = pg_query($query);
+        $rows = pg_num_rows($result);
+        return $rows;
+    }
+
+    public function checkPlanAccionTutorialDuplicado($idGrupo){
+        $this->conectar();
+        $query = 'select * from plan_accion_tutorial where id_grupo = '.$idGrupo;
+        $result = pg_query($query);
+        $rows = pg_num_rows($result);
+        return $rows;
+    }
+
+    public function checkReporteSemestralTutorDuplicado($idTutor){
+        $this->conectar();
+        $query = 'select * from reporte_tutor where id_tutor = '.$idTutor;
+        $result = pg_query($query);
+        $rows = pg_num_rows($result);
+        return $rows;
     }
 
     public function guardarReporteTutor($idTutor, $idGrupo, $fecha, $tabla, $observaciones) {
