@@ -398,4 +398,20 @@ $conn = new Connection();
             }
         });   
     }
+
+    function clicEliminarReporteSemestralCoordinadorInstitucional(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestralesCoordinadorInstitucionalEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
 </script>
