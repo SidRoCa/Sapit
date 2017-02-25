@@ -40,6 +40,7 @@ $conn = new Connection();
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicReporteSemestral()">Agregar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEditarReporteSemestralCoordinadorInstitucional()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarReporteSemestralCoordinadorInstitucional()">Eliminar</a></li>
                         </ul>
                         </li>
                         
@@ -65,9 +66,10 @@ $conn = new Connection();
                         </ul>
                         </li>
                         <li>
-                            Reportes semestrales de los coordinadores
+                            Reportes semestrales de los coordinadores departamentales
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarReporteSemestralCoordinador()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicEliminarReporteSemestralCoordinador()">Eliminar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -379,5 +381,21 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });
+    }
+
+    function clicEliminarReporteSemestralCoordinador(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestralCoordinadorEliminar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
     }
 </script>
