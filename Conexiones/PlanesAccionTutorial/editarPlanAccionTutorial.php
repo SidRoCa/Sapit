@@ -1,6 +1,6 @@
 <?php
 session_start();
-if ($_SESSION['tipo_usuario'] !== "crddpt") {
+if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !=="crdinst") {
     ?>
     <SCRIPT LANGUAGE="javascript">
         location.href = "validarSesion.php";

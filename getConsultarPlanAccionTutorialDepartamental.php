@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,10 +9,10 @@
         <?php
     }
     require "conexion.php";
+    $tipoUsuario = $_SESSION['tipo_usuario'];
     $conn = new Connection();
     $idPlan = $_POST['idPlan'];
     $planAccion = $conn->getPlanAccionTutorialDepartamentalPorId($idPlan);
-    $nombreCoordinador = $_SESSION['nombre_usuario'];
     $idDepartamento = $planAccion['idDepartamento'];
     $carreras = $conn->getCarrerasDpto($idDepartamento);
     $grupos = $conn->getGruposDpto($idDepartamento);
@@ -24,7 +24,7 @@
     <label>
         Nombre del coordinador: 
     </label>
-    <input type = "text" value = "<?php echo $nombreCoordinador?>" readonly/><br/>
+    <input type = "text" value = "<?php echo $planAccion['coordinador']?>" readonly/><br/>
     <h3>
         Datos generales
     </h3>

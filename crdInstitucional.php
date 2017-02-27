@@ -49,6 +49,7 @@ $conn = new Connection();
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticoDepartamental()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarDiagnosticoDepartamental()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarDiagnosticoDepartamental()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -56,6 +57,7 @@ $conn = new Connection();
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanAccionTutorialDepartamental()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarPlanAccionTutorialDepartamental()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarPlanAccionTutorialDepartamental()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -63,6 +65,7 @@ $conn = new Connection();
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanDesarrollarDiagnosticoDepartamental()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarPlanDesarrollarDiagnosticoDepartamental()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarPlanDesarrollarDiagnosticoDepartamental()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
@@ -75,19 +78,25 @@ $conn = new Connection();
                         <li>
                             Diagnósticos de grupos
                         <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticoGrupo()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarDiagnosticoGrupo()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarDiagnosticoGrupo()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
                             Planes acción tutorial
                         <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarPlanAccionTutorial()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarPlanAccionTutorial()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarPlanAccionTutorial()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
                             Reportes semestrales de los tutores
                         <ul>
+                            <li><a href="javascript:void(0);" onclick="clicEditarReporteSemestralTutor()">Editar</a></li>
                             <li><a href="javascript:void(0);" onclick="clicEliminarReporteSemestralTutor()">Eliminar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarReporteSemestralTutor()">Consultar</a></li>
                         </ul>
                         </li>
                     </ul>
@@ -413,5 +422,149 @@ $conn = new Connection();
                 $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
             }
         });   
+    }
+
+    function clicConsultarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosDepartamentales.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
+    }
+
+    function clicConsultarPlanAccionTutorialDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorialDepartamental.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarPlanDesarrollarDiagnosticoDepartamental(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesDesarrollarDiagnosticoDpt.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEditarDiagnosticoGrupo(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGruposEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarDiagnosticoGrupo(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGrupos.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEditarPlanAccionTutorial(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorialEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarPlanAccionTutorial(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorial.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicEditarReporteSemestralTutor(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesTutorEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarReporteSemestralTutor(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestrales.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });
     }
 </script>

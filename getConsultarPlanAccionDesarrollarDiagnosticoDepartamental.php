@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -12,7 +12,6 @@
     $conn = new Connection();
     $idPlan = $_POST['idPlan'];
     $plan = $conn->getPlanDesarrollarDiagnosticoDepartamentalPorId($idPlan);
-    $nombreCoordinador = $_SESSION['nombre_usuario'];
     $grupos = $conn->getGruposDpto($plan['idDepartamento']);
     ?>
     <h2>

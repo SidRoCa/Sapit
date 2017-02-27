@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -12,9 +12,7 @@
     $conn = new Connection();
     $idDiagnostico = $_POST['idDiagnostico'];
     $diagnosticoDepartamental = $conn->getDiagnosticoDepartamentalPorId($idDiagnostico);
-    $nombreCoord = $_SESSION['nombre_usuario'];
-    $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
-    $departamento = $conn->getDpto($idDepartamento);
+    $idDepartamento = $diagnosticoDepartamental['idDepartamento'];
     $carreras = $conn->getCarrerasDpto($idDepartamento);
     $semestres = $conn->getSemestresDpto($idDepartamento);
     ?>
@@ -23,7 +21,7 @@
     <label>
         Nombre del coordinador: 
     </label>
-    <input type = "text" value = "<?php echo $nombreCoord?>" readonly/>
+    <input type = "text" value = "<?php echo $diagnosticoDepartamental['coordinador']?>" readonly/>
     <label>
         Fecha : 
     </label>
@@ -34,7 +32,7 @@
     <label>
         Departamento : 
     </label>
-    <input type = "text" value = "<?php echo $departamento?>" readonly/> <br>
+    <input type = "text" value = "<?php echo $diagnosticoDepartamental['departamento']?>" readonly/> <br>
     <label>
         Carreras :
     </label>

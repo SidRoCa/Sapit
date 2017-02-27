@@ -61,18 +61,21 @@ $conn = new Connection();
                             Diagnósticos grupales
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarDiagnosticosGrupos()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarDiagnosticosGrupos()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
                             Planes de acción tutorial
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarPlanesAccionTutorial()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarPlanesAccionTutorial()">Consultar</a></li>
                         </ul>
                         </li>
                         <li>
                             Reportes de tutores
                         <ul>
                             <li><a href="javascript:void(0);" onclick="clicEditarReportesTutor()">Editar</a></li>
+                            <li><a href="javascript:void(0);" onclick="clicConsultarReportesTutor()">Consultar</a></li>
                         </ul>
                         </li>
                     </ul>
@@ -259,6 +262,54 @@ $conn = new Connection();
         $.ajax({
             method: "POST",
             url: "getListaReportesTutorEditar.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarDiagnosticosGrupos(){
+        $.ajax({
+            method: "POST",
+            url: "getListaDiagnosticosGrupos.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });     
+    }
+
+    function clicConsultarPlanesAccionTutorial(){
+        $.ajax({
+            method: "POST",
+            url: "getListaPlanesAccionTutorial.php"
+        }).done(function (msg) {
+            $("#mainContenido").show();
+            $("#mainContenido").html(msg);
+        }).fail(function (jqXHR, textStatus) {
+            if (textStatus === 'timeout') {
+                $("#mainContenido").html("El servidor está ocupado, inténtalo más tarde.");
+            } else {
+                $("#mainContenido").html("Ocurrió un error inesperado, inténtalo más tarde.");
+            }
+        });   
+    }
+
+    function clicConsultarReportesTutor(){
+        $.ajax({
+            method: "POST",
+            url: "getListaReportesSemestrales.php"
         }).done(function (msg) {
             $("#mainContenido").show();
             $("#mainContenido").html(msg);

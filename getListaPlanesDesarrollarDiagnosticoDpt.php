@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,23 +9,41 @@
         <?php
     }
     require "conexion.php";
+    $tipoUsuario = $_SESSION['tipo_usuario'];
     $conn = new Connection();    
-    $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
-    $planes = $conn->getListaPlanesDesarrollarDiagnosticoDptPorDepartamento($idDepartamento);
+    if($tipoUsuario == "crddpt"){
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $planes = $conn->getListaPlanesDesarrollarDiagnosticoDptPorDepartamento($idDepartamento);
+    }elseif ($tipoUsuario == "crdinst") {
+        $planes = $conn->getListaPlanesDesarrollarDiagnosticoDepartamental();
+    }
+    
     ?>
     <h2>Lista de planes para desarrollar el diagnóstico departamental</h2>
     <table id="tablaDatos">
-        <tr>
-            <th>
-                Fecha
-            </th>
-        </tr>
         <?php
-        foreach ($planes as $plan) {
-            echo '<tr data-id-plan ="' . $plan['idPlan'] . '">';
-            echo '<td>' . $plan['fecha'] . '</td>';
+        if($tipoUsuario == "crddpt"){
+            echo '<tr>';
+            echo '<th>Fecha</th>';
             echo '</tr>';
+            foreach ($planes as $plan) {
+                echo '<tr data-id-plan ="' . $plan['idPlan'] . '">';
+                echo '<td>' . $plan['fecha'] . '</td>';
+                echo '</tr>';
+            }
+        }elseif ($tipoUsuario == "crdinst") {
+            echo '<tr>';
+            echo '<th>Fecha</th>';
+            echo '<th>Departamento</th>';
+            echo '</tr>';
+            foreach ($planes as $plan) {
+                echo '<tr data-id-plan ="' . $plan['idPlan'] . '">';
+                echo '<td>' . $plan['fecha'] . '</td>';
+                echo '<td>' . $plan['departamento'] . '</td>';
+                echo '</tr>';
+            }
         }
+        
         ?>
     </table>
     <script>

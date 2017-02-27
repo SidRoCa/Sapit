@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "tutor") {
+    if ($_SESSION['tipo_usuario'] !== "tutor" and $_SESSION['tipo_usuario']!=="crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";

@@ -395,10 +395,10 @@ class Connection {
     public function getDiagnosticoDepartamentalPorId($idDiagnostico){
         $this->conectar();
         //getDptoUsuario
-        $query = 'select diagnostico_departamental.id as id, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as fecha, departamentos.nombre as departamento, diagnostico_departamental.coord_departamental as coordinador from diagnostico_departamental INNER JOIN departamentos ON (diagnostico_departamental.id_departamento = departamentos.id) where diagnostico_departamental.id = '.$idDiagnostico;
+        $query = 'select diagnostico_departamental.id as id, to_char(diagnostico_departamental.fecha, \'DD/MM/YYYY\') as fecha, departamentos.id as departamento_id,departamentos.nombre as departamento, diagnostico_departamental.coord_departamental as coordinador from diagnostico_departamental INNER JOIN departamentos ON (diagnostico_departamental.id_departamento = departamentos.id) where diagnostico_departamental.id = '.$idDiagnostico;
         $result = pg_query($query);
         $row = pg_fetch_array($result);
-        $res = array("fecha" =>$row['fecha'], "id"=> $row['id'], "departamento"=> $row['departamento'], "coordinador"=>$row['coordinador']);
+        $res = array("fecha" =>$row['fecha'], "id"=> $row['id'], "departamento"=> $row['departamento'], "coordinador"=>$row['coordinador'], "idDepartamento"=>$row['departamento_id']);
         $query2 = 'select * from det_diagnostico_departamental where id_diagnostico_departamental = '.$idDiagnostico;
         $result2 = pg_query($query2);
         $det = array();

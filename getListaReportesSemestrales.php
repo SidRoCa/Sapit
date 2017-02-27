@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "tutor") {
+    if ($_SESSION['tipo_usuario'] !== "tutor" and $_SESSION['tipo_usuario'] !=="crddpt" and $_SESSION['tipo_usuario']!=="crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -10,26 +10,46 @@
     }
     require "conexion.php";
     $conn = new Connection();    
-    $idTutor = $_POST['idTutor'];
-    $reportes = $conn->getListaReportesSemestralesPorTutor($idTutor);
+    if($_SESSION['tipo_usuario'] == "tutor"){
+        $idTutor = $_POST['idTutor'];
+        $reportes = $conn->getListaReportesSemestralesPorTutor($idTutor);
+    }elseif ($_SESSION['tipo_usuario'] == "crddpt") {
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $reportes = $conn->getListaReportesTutoresPorDepartamento($idDepartamento);
+    }elseif ($_SESSION['tipo_usuario'] == "crdinst") {
+        $reportes = $conn->getListaReportesSemestralesTutores();
+    }
+    
     ?>
     <h2>Lista de reportes semestrales</h2>
     <table id="tablaDatos">
-        <tr>
-            <th>
-                Grupo
-            </th>
-            <th>
-                Fecha
-            </th>
-        </tr>
         <?php
-        foreach ($reportes as $reporte) {
-            echo ('<tr data-id-reporte ="' . $reporte['idReporte'] . '">');
-            echo('<td>' . $reporte['nombreGrupo'] . '</td>');
-            echo('<td>' . $reporte['fecha'] . '</td>');
-            echo('</tr>');
+        if($_SESSION['tipo_usuario']=="tutor"){
+            echo '<tr>';
+            echo '<th>Grupo</th>';
+            echo '<th>Fecha</th>';
+            echo '</tr>';
+            foreach ($reportes as $reporte) {
+                echo ('<tr data-id-reporte ="' . $reporte['idReporte'] . '">');
+                echo('<td>' . $reporte['nombreGrupo'] . '</td>');
+                echo('<td>' . $reporte['fecha'] . '</td>');
+                echo('</tr>');
+            }
+        }elseif ($_SESSION['tipo_usuario'] == "crddpt" or $_SESSION['tipo_usuario']=="crdinst") {
+            echo '<tr>';
+            echo '<th>Grupo</th>';
+            echo '<th>Fecha</th>';
+            echo '<th>Tutor</th>';
+            echo '</tr>';
+            foreach ($reportes as $reporte) {
+                echo ('<tr data-id-reporte ="' . $reporte['idReporte'] . '">');
+                echo('<td>' . $reporte['grupo'] . '</td>');
+                echo('<td>' . $reporte['fecha'] . '</td>');
+                echo('<td>' . $reporte['tutor'] . '</td>');
+                echo('</tr>');
+            }
         }
+        
         ?>
     </table>
     <script>

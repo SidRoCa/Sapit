@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,9 +9,15 @@
         <?php
     }
     require "conexion.php";
-    $conn = new Connection();    
-    $nombreCoordinador = $_SESSION["nombre_usuario"];
-    $diagnosticos = $conn->getListaDiagnosticosDepartamentalesPorCoordinador($nombreCoordinador);
+    $conn = new Connection();
+    $tipoUsuario = $_SESSION['tipo_usuario'];
+    if($tipoUsuario == "crddpt"){
+        $nombreCoordinador = $_SESSION["nombre_usuario"];
+        $diagnosticos = $conn->getListaDiagnosticosDepartamentalesPorCoordinador($nombreCoordinador);
+    }elseif ($tipoUsuario == "crdinst") {
+        $diagnosticos = $conn->getListaDiagnosticosDepartamentales();
+    }
+    
     ?>
     <h2>Lista de diagnósticos departamentales </h2>
     <table id="tablaDatos">
@@ -21,11 +27,30 @@
             </th>
         </tr>
         <?php
-        foreach ($diagnosticos as $diagnostico) {
-            echo '<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">';
-            echo '<td>'.$diagnostico['fecha'].'</td>';
+        if($tipoUsuario == "crddpt"){
+            echo '<tr>';
+            echo '<td>Fecha diagnóstico</td>';
             echo '</tr>';
+            foreach ($diagnosticos as $diagnostico) {
+                echo '<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">';
+                echo '<td>'.$diagnostico['fecha'].'</td>';
+                echo '</tr>';
+            }
+        }elseif ($tipoUsuario == "crdinst") {
+            echo '<tr>';
+            echo '<td>Fecha diagnóstico</td>';
+            echo '<td>Coordinador</td>';
+            echo '<td>Departamento</td>';
+            echo '</tr>';
+            foreach ($diagnosticos as $diagnostico) {
+                echo '<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">';
+                echo '<td>'.$diagnostico['fecha'].'</td>';
+                echo '<td>'.$diagnostico['coordinador'].'</td>';
+                echo '<td>'.$diagnostico['departamento'].'</td>';
+                echo '</tr>';
+            }
         }
+        
         ?>
     </table>
     <script>

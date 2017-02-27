@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !=="crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,9 +9,15 @@
         <?php
     }
     require "conexion.php";
+    $tipoUsuario = $_SESSION['tipo_usuario'];
     $conn = new Connection();    
-    $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
-    $planes = $conn->getListaPlanesAccionTutorialPorDepartamento($idDepartamento);
+    if($tipoUsuario == "crddpt"){
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $planes = $conn->getListaPlanesAccionTutorialPorDepartamento($idDepartamento);
+    }elseif ($tipoUsuario == "crdinst") {
+        $planes = $conn->getListaPlanesAccionTutorial();
+    }
+    
     ?>
     <h2>Lista de planes de acción tutorial por departamento</h2>
     <table id="tablaDatos">
@@ -34,7 +40,11 @@
             echo '<tr data-id-plan ="' . $plan['idPlan'] . '">';
             echo '<td>' . $plan['grupo'] . '</td>';
             echo '<td>' . $plan['fecha'] . '</td>';
-            echo '<td>' . $plan['tutor'] . '</td>';
+            if($tipoUsuario == "crddpt"){
+                echo '<td>' . $plan['tutor'] . '</td>';
+            }elseif ($tipoUsuario == "crdinst") {
+                echo '<td>' . $plan['tutor1'] . '</td>';
+            }
             echo '<td>' . $plan['tutor2'] . '</td>';
             echo '</tr>';
         }

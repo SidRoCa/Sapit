@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "tutor") {
+    if ($_SESSION['tipo_usuario'] !== "tutor" and $_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] != "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -10,30 +10,69 @@
     }
     require "conexion.php";
     $conn = new Connection();    
-    $idTutor = $_POST['idTutor'];
-    $diagnosticos = $conn->getListaDiagnosticosGruposPorTutor($idTutor);
+    if($_SESSION['tipo_usuario']=="tutor"){
+        $idTutor = $_POST['idTutor'];
+        $diagnosticos = $conn->getListaDiagnosticosGruposPorTutor($idTutor);
+    }elseif($_SESSION['tipo_usuario']=="crddpt"){
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $diagnosticos = $conn->getListaDiagnosticosGruposPorDepartamento($idDepartamento);
+    }elseif ($_SESSION['tipo_usuario'] == "crdinst") {
+        $diagnosticos = $conn->getListaDiagnosticosGrupos();
+    }
+    
     ?>
     <h2>Lista de diagnósticos grupales</h2>
     <table id="tablaDatos">
-        <tr>
-            <th>
-                Grupo
-            </th>
-            <th>
-                Fecha diagnóstico
-            </th>
-            <th>
-                Semestre
-            </th>
-        </tr>
         <?php
-        foreach ($diagnosticos as $diagnostico) {
-            echo ('<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">');
-            echo('<td>' . $diagnostico['nombreGrupo'] . '</td>');
-            echo('<td>' . $diagnostico['fechaDiagnostico'] . '</td>');
-            echo('<td>' . $diagnostico['semestreDiagnostico'] . '</td>');
-            echo('</tr>');
+        if($_SESSION['tipo_usuario']=="tutor"){
+            echo '<tr>';
+            echo '<th>Grupo</th>';
+            echo '<th>Fecha diagnóstico</th>';
+            echo '<th>Semestre</th>';
+            echo '</tr>';
+            foreach ($diagnosticos as $diagnostico) {
+                echo ('<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">');
+                echo('<td>' . $diagnostico['nombreGrupo'] . '</td>');
+                echo('<td>' . $diagnostico['fechaDiagnostico'] . '</td>');
+                echo('<td>' . $diagnostico['semestreDiagnostico'] . '</td>');
+                echo('</tr>');
+            }
+        }elseif ($_SESSION['tipo_usuario'] == "crddpt") {
+            echo '<tr>';
+            echo '<th>Grupo</th>';
+            echo '<th>Fecha diagnóstico</th>';
+            echo '<th>Semestre</th>';
+            echo '<th>Tutor 1</th>';
+            echo '<th>Tutor 2</th>';
+            echo '</tr>';
+            foreach ($diagnosticos as $diagnostico) {
+                echo ('<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">');
+                echo('<td>' . $diagnostico['grupo'] . '</td>');
+                echo('<td>' . $diagnostico['fecha'] . '</td>');
+                echo('<td>' . $diagnostico['semestre'] . '</td>');
+                echo('<td>' . $diagnostico['tutor'] . '</td>');
+                echo('<td>' . $diagnostico['tutor2'] . '</td>');
+                echo('</tr>');
+            }
+        }elseif ($_SESSION['tipo_usuario'] == "crdinst") {
+            echo '<tr>';
+            echo '<th>Grupo</th>';
+            echo '<th>Fecha diagnóstico</th>';
+            echo '<th>Semestre</th>';
+            echo '<th>Tutor 1</th>';
+            echo '<th>Tutor 2</th>';
+            echo '</tr>';
+            foreach ($diagnosticos as $diagnostico) {
+                echo ('<tr data-id-diagnostico ="' . $diagnostico['idDiagnostico'] . '">');
+                echo('<td>' . $diagnostico['grupo'] . '</td>');
+                echo('<td>' . $diagnostico['fecha'] . '</td>');
+                echo('<td>' . $diagnostico['semestre'] . '</td>');
+                echo('<td>' . $diagnostico['tutor1'] . '</td>');
+                echo('<td>' . $diagnostico['tutor2'] . '</td>');
+                echo('</tr>');
+            }
         }
+        
         ?>
     </table>
     <script>

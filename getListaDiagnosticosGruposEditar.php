@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -9,9 +9,15 @@
         <?php
     }
     require "conexion.php";
-    $conn = new Connection();    
-    $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
-    $diagnosticos = $conn->getListaDiagnosticosGruposPorDepartamento($idDepartamento);
+    $tipoUsuario = $_SESSION['tipo_usuario'];
+    $conn = new Connection();
+    if($tipoUsuario == "crddpt"){
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $diagnosticos = $conn->getListaDiagnosticosGruposPorDepartamento($idDepartamento);
+    }elseif ($tipoUsuario == "crdinst") {
+        $diagnosticos = $conn->getListaDiagnosticosGrupos();
+    }    
+    
     ?>
     <h2>Lista de diagnósticos grupales de departamento</h2>
     <table id="tablaDatos">
@@ -38,7 +44,11 @@
             echo('<td>' . $diagnostico['grupo'] . '</td>');
             echo('<td>' . $diagnostico['fecha'] . '</td>');
             echo('<td>' . $diagnostico['semestre'] . '</td>');
-            echo('<td>' . $diagnostico['tutor'] . '</td>');
+            if($tipoUsuario == "crddpt"){
+                echo('<td>' . $diagnostico['tutor'] . '</td>');
+            }elseif ($tipoUsuario == "crdinst") {
+                echo('<td>' . $diagnostico['tutor1'] . '</td>');
+            }
             echo('<td>' . $diagnostico['tutor2'] . '</td>');
             echo('</tr>');
         }

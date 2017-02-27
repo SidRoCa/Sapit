@@ -1,7 +1,7 @@
 <div>
     <?php
     session_start();
-    if ($_SESSION['tipo_usuario'] !== "crddpt") {
+    if ($_SESSION['tipo_usuario'] !== "crddpt" and $_SESSION['tipo_usuario'] !== "crdinst") {
         ?>
         <SCRIPT LANGUAGE="javascript">
             location.href = "validarSesion.php";
@@ -10,8 +10,14 @@
     }
     require "conexion.php";
     $conn = new Connection();    
-    $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
-    $reportes = $conn->getListaReportesTutoresPorDepartamento($idDepartamento);
+    $tipoUsuario = $_SESSION["tipo_usuario"];
+    if($tipoUsuario == "crddpt"){
+        $idDepartamento = $conn->getDptoUsuario($_SESSION["id_usuario"]);
+        $reportes = $conn->getListaReportesTutoresPorDepartamento($idDepartamento);
+    }elseif ($tipoUsuario == "crdinst") {
+        $reportes = $conn->getListaReportesSemestralesTutores();
+    }
+    
     ?>
     <h2>Lista de reportes de los tutores</h2>
     <table id="tablaDatos">
